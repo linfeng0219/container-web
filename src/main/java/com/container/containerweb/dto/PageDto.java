@@ -1,7 +1,7 @@
 package com.container.containerweb.dto;
 
 public class PageDto {
-    private int page;
+    private int page = 0;
 
     private int size;
 

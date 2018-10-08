@@ -17,6 +17,8 @@ public class Resource {
 
     private String url;
 
+    private Integer pid;
+
     private String icon;
 
     public Integer getId() {
@@ -49,5 +51,13 @@ public class Resource {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 }

@@ -1,7 +1,5 @@
 package com.container.containerweb.dto;
 
-import com.container.containerweb.model.rbac.Role;
-
 import java.util.List;
 
 public class AuthorityDto {

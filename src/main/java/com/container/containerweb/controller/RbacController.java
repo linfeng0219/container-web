@@ -2,18 +2,21 @@ package com.container.containerweb.controller;
 
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
-import com.container.containerweb.dto.AuthorityDto;
-import com.container.containerweb.dto.QueryUserDto;
+import com.container.containerweb.dto.*;
 import com.container.containerweb.model.rbac.Role;
 import com.container.containerweb.model.rbac.User;
 import com.container.containerweb.service.RbacService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 public class RbacController {
@@ -21,10 +24,31 @@ public class RbacController {
     @Resource
     private RbacService rbacService;
 
-    @PostMapping("/user/save")
+    @PostMapping("/user/login")
+    public Object login(@RequestBody LoginDto dto, HttpSession session) {
+        try {
+            UserDto user = rbacService.login(dto.getUsername(), dto.getPassword());
+            session.setAttribute("user", user);
+            return BaseResponse.success(user);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.loginError, e.getMessage());
+        }
+    }
+
+    @PostMapping("/user/add")
     public Object saveUser(@RequestBody User user) {
         try {
             rbacService.saveUser(user);
+            return BaseResponse.success();
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.saveUserError, e.getMessage());
+        }
+    }
+
+    @PostMapping("/user/update")
+    public Object updateUser(@RequestBody User user) {
+        try {
+            rbacService.updateUser(user);
             return BaseResponse.success();
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.saveUserError, e.getMessage());
@@ -41,6 +65,26 @@ public class RbacController {
         }
     }
 
+    @GetMapping("/user/query")
+    public Object queryUser(QueryUserDto dto) {
+        try {
+            UserDto userDto = rbacService.queryUser(dto);
+            return BaseResponse.success(userDto);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryUserError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/user/list")
+    public Object userList(@PageableDefault Pageable pageable) {
+        try {
+            Page<UserDto> users = rbacService.getUserList(pageable);
+            return BaseResponse.success(users);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryUserError, e.getMessage());
+        }
+    }
+
     @PostMapping("/user/authorize")
     public Object authorizeUser(@RequestBody AuthorityDto authorityDto) {
         try {
@@ -48,6 +92,25 @@ public class RbacController {
             return BaseResponse.success();
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.authorizeUserError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/role/list")
+    public Object roleList() {
+        try {
+            List<RoleDto> list = rbacService.findAll();
+            return BaseResponse.success(list);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryRoleError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/role/query")
+    public Object queryRole(Integer id) {
+        try {
+            return BaseResponse.success(rbacService.queryRole(id));
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryRoleError, e.getMessage());
         }
     }
 
@@ -81,13 +144,26 @@ public class RbacController {
         }
     }
 
-    @GetMapping("/user/query")
-    public Object queryUser(QueryUserDto dto) {
+    @GetMapping("/resource/list")
+    public Object resourceList() {
         try {
-            Page<User> data = rbacService.queryUser(dto);
-            return BaseResponse.success(data);
+            List<ResourceDto> list = rbacService.getResourceList();
+            return BaseResponse.success(list);
         } catch (Exception e) {
-            return BaseResponse.error(ErrorCodes.queryUserError, e.getMessage());
+            return BaseResponse.error(ErrorCodes.queryResourceError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/user/valid-session")
+    public Object validSession(HttpSession session) {
+        try {
+            UserDto user = (UserDto) session.getAttribute("user");
+            if (user != null)
+                return BaseResponse.success(user);
+            else
+                throw new IllegalArgumentException("用户未登录");
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.unlogonError, e.getMessage());
         }
     }
 }

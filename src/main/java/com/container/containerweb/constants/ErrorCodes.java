@@ -9,4 +9,8 @@ public final class ErrorCodes {
     public static int authorizeRoleError = 1005;
     public static int saveResourceError = 1006;
     public static int queryUserError = 1007;
+    public static int loginError = 1008;
+    public static int unlogonError = 1009;
+    public static int queryRoleError = 1010;
+    public static int queryResourceError = 1011;
 }

@@ -21,6 +21,8 @@ public class Goods {
 
     private int status;
 
+    private String comment;
+
     public long getId() {
         return id;
     }
@@ -59,5 +61,13 @@ public class Goods {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

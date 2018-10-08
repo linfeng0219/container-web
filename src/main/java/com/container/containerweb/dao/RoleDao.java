@@ -1,6 +1,5 @@
 package com.container.containerweb.dao;
 
-import com.container.containerweb.model.rbac.Resource;
 import com.container.containerweb.model.rbac.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

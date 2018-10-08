@@ -1,6 +1,9 @@
 package com.container.containerweb.dto;
 
 public class QueryUserDto extends PageDto {
+
+    private Integer id;
+
     private String name;
 
     private String phone;
@@ -19,5 +22,13 @@ public class QueryUserDto extends PageDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

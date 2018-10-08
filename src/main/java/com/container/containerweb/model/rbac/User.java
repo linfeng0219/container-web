@@ -17,13 +17,27 @@ public class User {
     private String gender;
 
     private String phone;
-    
+
     private String password;
 
-    private boolean enabled = true;
+    private int status;
 
     @ManyToMany
     private List<Role> roles;
+
+    public User(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+
+    public User(String name, String phone, String password) {
+        this.name = name;
+        this.phone = phone;
+        this.password = password;
+    }
+
+    public User() {
+    }
 
     public Integer getId() {
         return id;
@@ -73,11 +87,11 @@ public class User {
         this.password = password;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public int getStatus() {
+        return status;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

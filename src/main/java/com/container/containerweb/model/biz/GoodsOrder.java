@@ -1,10 +1,11 @@
 package com.container.containerweb.model.biz;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Table
 @Entity
-public class Order {
+public class GoodsOrder {
 
     @Id
     @GeneratedValue
@@ -12,8 +13,8 @@ public class Order {
 
     private String serial;
 
-    @OneToOne
-    private Goods goods;
+    @OneToMany
+    private List<Goods> goods;
 
     private Long createTime;
 
@@ -37,14 +38,6 @@ public class Order {
 
     public void setSerial(String serial) {
         this.serial = serial;
-    }
-
-    public Goods getGoods() {
-        return goods;
-    }
-
-    public void setGoods(Goods goods) {
-        this.goods = goods;
     }
 
     public Long getCreateTime() {
@@ -77,5 +70,13 @@ public class Order {
 
     public void setPayment(int payment) {
         this.payment = payment;
+    }
+
+    public List<Goods> getGoods() {
+        return goods;
+    }
+
+    public void setGoods(List<Goods> goods) {
+        this.goods = goods;
     }
 }
