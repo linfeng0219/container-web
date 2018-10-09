@@ -13,4 +13,8 @@ public final class ErrorCodes {
     public static int unlogonError = 1009;
     public static int queryRoleError = 1010;
     public static int queryResourceError = 1011;
+    public static int queryMachineError = 1012;
+    public static int storeGoodsError = 1013;
+    public static int removeGoodsError = 1014;
+    public static int createOrderError = 1015;
 }

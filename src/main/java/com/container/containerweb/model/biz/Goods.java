@@ -1,9 +1,6 @@
 package com.container.containerweb.model.biz;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Table
 @Entity
@@ -11,7 +8,7 @@ public class Goods {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -21,13 +18,20 @@ public class Goods {
 
     private int status;
 
+    private String barCode;
+
     private String comment;
 
-    public long getId() {
+    private String idx;
+
+    @ManyToOne
+    private VendingMachine vendingMachine;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,5 +73,29 @@ public class Goods {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
+
+    public VendingMachine getVendingMachine() {
+        return vendingMachine;
+    }
+
+    public void setVendingMachine(VendingMachine vendingMachine) {
+        this.vendingMachine = vendingMachine;
+    }
+
+    public String getIdx() {
+        return idx;
+    }
+
+    public void setIdx(String idx) {
+        this.idx = idx;
     }
 }

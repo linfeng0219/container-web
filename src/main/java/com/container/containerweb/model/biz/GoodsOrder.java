@@ -1,7 +1,6 @@
 package com.container.containerweb.model.biz;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Table
 @Entity
@@ -9,35 +8,35 @@ public class GoodsOrder {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
-    private String serial;
+    private String orderNo;
 
-    @OneToMany
-    private List<Goods> goods;
+    @OneToOne
+    private Goods goods;
 
     private Long createTime;
 
     private Long paymentTime;//付款时间
 
-    private Long paymentMode;//付款方式
+    private Integer paymentMode;//付款方式
 
-    private int payment;//单位‘分’
+    private Integer payment;//单位‘分’
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getSerial() {
-        return serial;
+    public String getOrderNo() {
+        return orderNo;
     }
 
-    public void setSerial(String serial) {
-        this.serial = serial;
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 
     public Long getCreateTime() {
@@ -56,27 +55,27 @@ public class GoodsOrder {
         this.paymentTime = paymentTime;
     }
 
-    public Long getPaymentMode() {
+    public Integer getPaymentMode() {
         return paymentMode;
     }
 
-    public void setPaymentMode(Long paymentMode) {
+    public void setPaymentMode(Integer paymentMode) {
         this.paymentMode = paymentMode;
     }
 
-    public int getPayment() {
+    public Integer getPayment() {
         return payment;
     }
 
-    public void setPayment(int payment) {
+    public void setPayment(Integer payment) {
         this.payment = payment;
     }
 
-    public List<Goods> getGoods() {
+    public Goods getGoods() {
         return goods;
     }
 
-    public void setGoods(List<Goods> goods) {
+    public void setGoods(Goods goods) {
         this.goods = goods;
     }
 }
