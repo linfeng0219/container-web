@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class RbacService {
         if (dto.getId() != null) {
             user = userDao.findById(dto.getId());
         } else {
-            user = userDao.findByNameOrPhone(dto.getName(), dto.getPhone());
+            user = userDao.findByNameOrPhone("%" + dto.getName() + "%", dto.getPhone());
         }
         if (user != null) {
             UserDto userDto = new UserDto(user.getId(), user.getName(), user.getPhone());
@@ -98,6 +99,22 @@ public class RbacService {
             return userDto;
         }
         return null;
+    }
+
+    public List<UserDto> queryUserByNameLike(String name) {
+        List<User> users;
+        if (StringUtils.isEmpty(name)) {
+            users = userDao.findAll();
+        } else {
+            users = userDao.findByNameLike("%" + name + "%");
+        }
+        List<UserDto> userDtos = new ArrayList<>(users.size());
+        for (User user : users) {
+            UserDto userDto = new UserDto(user.getId(), user.getName(), user.getPhone());
+            userDto.setRoles(this.parseRoleListToRoleDtoList(user.getRoles()));
+            userDtos.add(userDto);
+        }
+        return userDtos;
     }
 
     public UserDto login(String username, String password) throws IllegalAccessException {

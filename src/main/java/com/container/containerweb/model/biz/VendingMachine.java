@@ -11,13 +11,13 @@ public class VendingMachine {
 
     @Id
     @GeneratedValue
-    private int id;
+    private Integer id;
 
     private String serial;//序列号
 
     private String location;
 
-    private int status;
+    private Integer status;
 
     private Long updateTime;
 
@@ -26,14 +26,17 @@ public class VendingMachine {
     @OneToMany
     private List<Goods> goods;
 
+    @ManyToOne
+    private Merchant merchant;
+
     @OneToOne
     private User master;//负责人
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -53,11 +56,11 @@ public class VendingMachine {
         this.location = location;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -91,5 +94,13 @@ public class VendingMachine {
 
     public void setGoods(List<Goods> goods) {
         this.goods = goods;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 }

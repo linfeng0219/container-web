@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserDao extends JpaRepository<User, Integer> {
 
@@ -19,4 +21,6 @@ public interface UserDao extends JpaRepository<User, Integer> {
     User findByNameOrPhone(String name, String phone);
 
     User findById(Integer id);
+
+    List<User> findByNameLike(String name);
 }

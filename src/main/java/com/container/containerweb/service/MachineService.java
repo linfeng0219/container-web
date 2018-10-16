@@ -1,14 +1,15 @@
 package com.container.containerweb.service;
 
 import com.container.containerweb.constants.GoodsStatus;
-import com.container.containerweb.dao.GoodsDao;
-import com.container.containerweb.dao.GoodsOrderDao;
-import com.container.containerweb.dao.MachineDao;
+import com.container.containerweb.constants.MachineStatus;
+import com.container.containerweb.dao.*;
 import com.container.containerweb.dto.GoodsIdxCode;
 import com.container.containerweb.dto.MachineGoodsBinding;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.GoodsOrder;
+import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
+import com.container.containerweb.model.rbac.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,7 +24,13 @@ public class MachineService {
     private MachineDao machineDao;
 
     @Resource
+    private MerchantDao merchantDao;
+
+    @Resource
     private GoodsDao goodsDao;
+
+    @Resource
+    private UserDao userDao;
 
     @Resource
     private GoodsOrderDao goodsOrderDao;
@@ -71,5 +78,19 @@ public class MachineService {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public void save(VendingMachine machine) {
+        if (machine.getId() == null)
+            machine.setCreateTime(System.currentTimeMillis());
+        Merchant merchant = merchantDao.findOne(machine.getMerchant().getId());
+        User master = userDao.findOne(machine.getMaster().getId());
+        if (merchant == null || master == null) {
+            throw new IllegalArgumentException();
+        }
+        machine.setMaster(master);
+        machine.setMerchant(merchant);
+        machine.setStatus(MachineStatus.OFFLINE.getCode());
+        machineDao.save(machine);
     }
 }

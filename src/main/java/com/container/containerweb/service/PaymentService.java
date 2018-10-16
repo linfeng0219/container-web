@@ -5,7 +5,10 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.container.containerweb.base.WxPayConfig;
+import com.container.containerweb.dao.MachineDao;
 import com.container.containerweb.model.biz.GoodsOrder;
+import com.container.containerweb.model.biz.Merchant;
+import com.container.containerweb.model.biz.VendingMachine;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
@@ -24,13 +27,17 @@ public class PaymentService {
     @Resource
     private ObjectMapper objectMapper;
 
+    @Resource
+    private MachineDao machineDao;
+
     @Value("${alipay_public_key}")
     private String alipayPublicKey;
 
 
     public String wxPay(GoodsOrder order, String ip) throws Exception {
-
-        WxPayConfig config = new WxPayConfig();
+        VendingMachine machine = machineDao.findBySerial(order.getMachineSerial());
+        Merchant tenant = machine.getMerchant();
+        WxPayConfig config = tenant.getWxPayConfig();
         WXPay wxpay = new WXPay(config);
 
         Map<String, String> data = new HashMap<>();
@@ -53,10 +60,11 @@ public class PaymentService {
     }
 
     public String aliPay(GoodsOrder order) throws Exception {
+        VendingMachine machine = machineDao.findBySerial(order.getMachineSerial());
+        Merchant tenant = machine.getMerchant();
+        String appId = tenant.getAlipayAppId();
 
-        String appId = "";//todo from db
-
-        String appPrivateKey = "";
+        String appPrivateKey = tenant.getAlipayPrivateKey();
 
         AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", appId, appPrivateKey, "json", CHARSET, alipayPublicKey, "RSA2");  //获得初始化的AlipayClient
 //创建API对应的request类

@@ -65,10 +65,20 @@ public class RbacController {
         }
     }
 
-    @GetMapping("/user/query")
-    public Object queryUser(QueryUserDto dto) {
+    @GetMapping("/user/exact-query")
+    public Object queryExactUser(QueryUserDto dto) {
         try {
             UserDto userDto = rbacService.queryUser(dto);
+            return BaseResponse.success(userDto);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryUserError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/user/name-like-query")
+    public Object queryUserNameLike(QueryUserDto dto) {
+        try {
+            List<UserDto> userDto = rbacService.queryUserByNameLike(dto.getName());
             return BaseResponse.success(userDto);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryUserError, e.getMessage());

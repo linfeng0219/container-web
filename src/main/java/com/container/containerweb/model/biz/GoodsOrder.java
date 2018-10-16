@@ -12,6 +12,8 @@ public class GoodsOrder {
 
     private String orderNo;
 
+    private String machineSerial;
+
     @OneToOne
     private Goods goods;
 
@@ -77,5 +79,13 @@ public class GoodsOrder {
 
     public void setGoods(Goods goods) {
         this.goods = goods;
+    }
+
+    public String getMachineSerial() {
+        return machineSerial;
+    }
+
+    public void setMachineSerial(String machineSerial) {
+        this.machineSerial = machineSerial;
     }
 }

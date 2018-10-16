@@ -4,13 +4,11 @@ import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
 import com.container.containerweb.model.biz.GoodsOrder;
+import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.PaymentService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -26,13 +24,23 @@ public class MachineController {
     @Resource
     private PaymentService paymentService;
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     public Object list() {
         try {
             List<VendingMachine> list = machineService.getMachineList();
             return BaseResponse.success(list);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryMachineError, e.getMessage());
+        }
+    }
+
+    @PostMapping("/save")
+    public Object saveMch(@RequestBody VendingMachine machine) {
+        try {
+            machineService.save(machine);
+            return BaseResponse.success();
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.addMerchantError, e.getMessage());
         }
     }
 
@@ -56,11 +64,11 @@ public class MachineController {
         }
     }
 
-    @PostMapping("/createOrder")
+    @PostMapping("/uploadOrder")
     public Object createOrder(@RequestBody GoodsOrder goodsOrder, HttpServletRequest request) {
         try {
             machineService.addOrder(goodsOrder);
-            String codeUrl = "";
+            String codeUrl;
             //wx
             if (goodsOrder.getPayment() == 0) {
                 codeUrl = paymentService.wxPay(goodsOrder, request.getRemoteHost());
@@ -72,5 +80,4 @@ public class MachineController {
             return BaseResponse.error(ErrorCodes.createOrderError, e.getMessage());
         }
     }
-
 }

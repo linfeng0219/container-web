@@ -17,4 +17,7 @@ public final class ErrorCodes {
     public static int storeGoodsError = 1013;
     public static int removeGoodsError = 1014;
     public static int createOrderError = 1015;
+    public static int queryMerchantError = 1016;
+    public static int addMerchantError = 1017;
+    public static int queryOrderError = 1018;
 }
