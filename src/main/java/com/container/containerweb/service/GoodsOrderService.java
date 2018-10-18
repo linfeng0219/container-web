@@ -16,4 +16,12 @@ public class GoodsOrderService {
     public List<GoodsOrder> getList() {
         return goodsOrderDao.findAll();
     }
+
+    public GoodsOrder getOrderByGoodsBarCode(String barCode) {
+        GoodsOrder order = goodsOrderDao.findGoodsOrderByGoodsBarCode(barCode);
+        if (order == null){
+            throw new NullPointerException();
+        }
+        return order;
+    }
 }

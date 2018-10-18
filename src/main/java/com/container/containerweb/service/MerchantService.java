@@ -19,6 +19,9 @@ public class MerchantService {
     }
 
     public void save(Merchant merchant) {
+        if (merchant.getName() == null){
+            throw new IllegalArgumentException();
+        }
         merchantDao.save(merchant);
     }
 

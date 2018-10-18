@@ -4,8 +4,8 @@ import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
 import com.container.containerweb.model.biz.GoodsOrder;
-import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
+import com.container.containerweb.service.GoodsOrderService;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +23,9 @@ public class MachineController {
 
     @Resource
     private PaymentService paymentService;
+
+    @Resource
+    private GoodsOrderService orderService;
 
     @GetMapping("/list")
     public Object list() {
@@ -44,7 +47,7 @@ public class MachineController {
         }
     }
 
-    @PostMapping("/storeGoods")
+    @PostMapping("/store-goods")
     public Object storeGoods(@RequestBody MachineGoodsBinding binding) {
         try {
             machineService.storeGoods(binding);
@@ -64,7 +67,7 @@ public class MachineController {
         }
     }
 
-    @PostMapping("/uploadOrder")
+    @PostMapping("/upload-order")
     public Object createOrder(@RequestBody GoodsOrder goodsOrder, HttpServletRequest request) {
         try {
             machineService.addOrder(goodsOrder);
@@ -78,6 +81,16 @@ public class MachineController {
             return BaseResponse.success(codeUrl);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.createOrderError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-order")
+    public Object updateStatus(String barCode) {
+        try {
+            GoodsOrder order = orderService.getOrderByGoodsBarCode(barCode);
+            return BaseResponse.success(order);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryOrderError, e.getMessage());
         }
     }
 }
