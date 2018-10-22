@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface GoodsDao extends JpaRepository<Goods, Long> {
-    List<Goods> findByBarCodeIn(List<String> codes);
+    List<Goods> findByBarcodeIn(List<String> codes);
 
-    Goods findByBarCodeAndIdx(String code, String idx);
+    Goods findByBarcodeAndIdx(String code, String idx);
 }
+

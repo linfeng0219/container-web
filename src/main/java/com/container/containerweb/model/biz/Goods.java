@@ -18,9 +18,12 @@ public class Goods {
 
     private int status;
 
-    private String barCode;
+    private String barcode;
 
     private String comment;
+
+    @ManyToOne
+    private GoodsDescription goodsDescription;
 
     private String idx;
 
@@ -75,12 +78,12 @@ public class Goods {
         this.comment = comment;
     }
 
-    public String getBarCode() {
-        return barCode;
+    public String getBarcode() {
+        return barcode;
     }
 
-    public void setBarCode(String barCode) {
-        this.barCode = barCode;
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 
     public VendingMachine getVendingMachine() {
@@ -97,5 +100,13 @@ public class Goods {
 
     public void setIdx(String idx) {
         this.idx = idx;
+    }
+
+    public GoodsDescription getGoodsDescription() {
+        return goodsDescription;
+    }
+
+    public void setGoodsDescription(GoodsDescription goodsDescription) {
+        this.goodsDescription = goodsDescription;
     }
 }

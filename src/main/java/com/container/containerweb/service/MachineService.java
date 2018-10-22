@@ -40,13 +40,13 @@ public class MachineService {
     }
 
     public void storeGoods(MachineGoodsBinding binding) {
-        List<Goods> goods = goodsDao.findByBarCodeIn(binding.getCodes());
+        List<Goods> goods = goodsDao.findByBarcodeIn(binding.getCodes());
         VendingMachine machine = machineDao.findBySerial(binding.getSerial());
         goods.forEach(e -> {
             e.setVendingMachine(machine);
             e.setStatus(GoodsStatus.STORED.getCode());
             binding.getIdxCode().forEach(r -> {
-                if (Objects.equals(r.getCode(), e.getBarCode())) {
+                if (Objects.equals(r.getCode(), e.getBarcode())) {
                     e.setIdx(r.getIndex());
                 }
             });
@@ -56,7 +56,7 @@ public class MachineService {
 
     public void removeGoods(MachineGoodsBinding binding) {
         GoodsIdxCode idxCode = binding.getIdxCode().get(0);
-        Goods goods = goodsDao.findByBarCodeAndIdx(idxCode.getCode(), idxCode.getIndex());
+        Goods goods = goodsDao.findByBarcodeAndIdx(idxCode.getCode(), idxCode.getIndex());
         if (goods != null) {
             goods.setVendingMachine(null);
             goods.setStatus(GoodsStatus.SOLD.getCode());
@@ -67,7 +67,7 @@ public class MachineService {
     }
 
     public void addOrder(GoodsOrder order) {
-        Goods goods = goodsDao.findByBarCodeAndIdx(order.getGoods().getBarCode(), order.getGoods().getIdx());
+        Goods goods = goodsDao.findByBarcodeAndIdx(order.getGoods().getBarcode(), order.getGoods().getIdx());
         if (goods != null) {
             order.setId(null);
             order.setCreateTime(System.currentTimeMillis());

@@ -17,8 +17,8 @@ public class GoodsOrderService {
         return goodsOrderDao.findAll();
     }
 
-    public GoodsOrder getOrderByGoodsBarCode(String barCode) {
-        GoodsOrder order = goodsOrderDao.findGoodsOrderByGoodsBarCode(barCode);
+    public GoodsOrder getOrderByGoodsBarCode(String barcode) {
+        GoodsOrder order = goodsOrderDao.findGoodsOrderByGoodsBarcode(barcode);
         if (order == null){
             throw new NullPointerException();
         }

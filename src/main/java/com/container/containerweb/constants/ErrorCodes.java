@@ -20,4 +20,7 @@ public final class ErrorCodes {
     public static int queryMerchantError = 1016;
     public static int addMerchantError = 1017;
     public static int queryOrderError = 1018;
+    public static int addGoodsError = 1019;
+    public static int queryGoodsDescError = 1020;
+    public static int addGoodsDescError = 1021;
 }
