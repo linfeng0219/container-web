@@ -17,6 +17,8 @@ public class GoodsDescription {
 
     private String imageHash;
 
+    private Integer price;
+
     public Integer getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class GoodsDescription {
 
     public void setImageHash(String imageHash) {
         this.imageHash = imageHash;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }

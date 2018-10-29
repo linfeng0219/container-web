@@ -66,21 +66,7 @@ public class MachineService {
         }
     }
 
-    public void addOrder(GoodsOrder order) {
-        Goods goods = goodsDao.findByBarcodeAndIdx(order.getGoods().getBarcode(), order.getGoods().getIdx());
-        if (goods != null) {
-            order.setId(null);
-            order.setCreateTime(System.currentTimeMillis());
-            order.setGoods(goods);
-            order.setPayment(goods.getPrice());
-            order.setOrderNo(UUID.randomUUID().toString());
-            goodsOrderDao.save(order);
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    public void save(VendingMachine machine) {
+    public VendingMachine save(VendingMachine machine) {
         if (machine.getId() == null)
             machine.setCreateTime(System.currentTimeMillis());
         Merchant merchant = merchantDao.findOne(machine.getMerchant().getId());
@@ -91,6 +77,14 @@ public class MachineService {
         machine.setMaster(master);
         machine.setMerchant(merchant);
         machine.setStatus(MachineStatus.OFFLINE.getCode());
-        machineDao.save(machine);
+        return machineDao.save(machine);
+    }
+
+    public VendingMachine updateStatus(VendingMachine machine) {
+        VendingMachine one = machineDao.findBySerial(machine.getSerial());
+        one.setStatus(machine.getStatus());
+        one.setUpdateTime(System.currentTimeMillis());
+        one.setTemperature(machine.getTemperature());
+        return machineDao.save(one);
     }
 }

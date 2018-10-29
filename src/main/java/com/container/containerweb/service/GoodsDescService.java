@@ -27,9 +27,10 @@ public class GoodsDescService {
         return goodsDescDao.findAll();
     }
 
-    public void addGoodsDesc(MultipartFile file, String desc) throws IOException {
+    public void addGoodsDesc(MultipartFile file, String desc, String price) throws IOException {
         GoodsDescription description = new GoodsDescription();
         description.setDescription(desc);
+        description.setPrice(Integer.valueOf(price));
         String hash = DigestUtils.md5DigestAsHex(file.getBytes());
         description.setImageHash(hash);
         goodsDescDao.save(description);

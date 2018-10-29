@@ -10,10 +10,6 @@ public class Goods {
     @GeneratedValue
     private Long id;
 
-    private String name;
-
-    private int price;
-
     private Long createTime;
 
     private int status;
@@ -36,22 +32,6 @@ public class Goods {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public Long getCreateTime() {

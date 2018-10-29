@@ -29,9 +29,9 @@ public class GoodsDescController {
     }
 
     @RequestMapping("/add")
-    public Object add(MultipartFile file, String description) {
+    public Object add(MultipartFile file, String description, String price) {
         try {
-            goodsDescService.addGoodsDesc(file, description);
+            goodsDescService.addGoodsDesc(file, description, price);
             return BaseResponse.success();
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.addGoodsDescError, e.getMessage());

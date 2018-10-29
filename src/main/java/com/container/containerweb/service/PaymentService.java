@@ -36,12 +36,11 @@ public class PaymentService {
 
     public String wxPay(GoodsOrder order, String ip) throws Exception {
         VendingMachine machine = machineDao.findBySerial(order.getMachineSerial());
-        Merchant tenant = machine.getMerchant();
-        WxPayConfig config = tenant.getWxPayConfig();
+        WxPayConfig config = machine.getMerchant().getWxPayConfig();
         WXPay wxpay = new WXPay(config);
 
         Map<String, String> data = new HashMap<>();
-        data.put("body", order.getGoods().getName());
+        data.put("body", order.getGoods().getGoodsDescription().getDescription());
         data.put("out_trade_no", order.getOrderNo());
         data.put("device_info", ip);
         data.put("fee_type", "CNY");
@@ -70,7 +69,7 @@ public class PaymentService {
 //创建API对应的request类
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         Map<String, String> bizContent = new HashMap<>();
-        bizContent.put("subject", order.getGoods().getName());
+        bizContent.put("subject", order.getGoods().getGoodsDescription().getDescription());
         bizContent.put("out_trade_no", order.getOrderNo());
         bizContent.put("total_amount", new StringBuffer(order.getPayment().toString()).insert(2, ".").toString());
         request.setBizContent(objectMapper.writeValueAsString(bizContent));

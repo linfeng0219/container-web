@@ -21,6 +21,8 @@ public class VendingMachine {
 
     private Long updateTime;
 
+    private Integer temperature;
+
     private Long createTime;
 
     @OneToMany
@@ -102,5 +104,13 @@ public class VendingMachine {
 
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
+    }
+
+    public Integer getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(Integer temperature) {
+        this.temperature = temperature;
     }
 }

@@ -3,7 +3,6 @@ package com.container.containerweb.controller;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
-import com.container.containerweb.model.biz.GoodsOrder;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.service.GoodsOrderService;
 import com.container.containerweb.service.MachineService;
@@ -11,7 +10,6 @@ import com.container.containerweb.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -40,8 +38,8 @@ public class MachineController {
     @PostMapping("/save")
     public Object saveMch(@RequestBody VendingMachine machine) {
         try {
-            machineService.save(machine);
-            return BaseResponse.success();
+            VendingMachine saved = machineService.save(machine);
+            return BaseResponse.success(saved);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.addMerchantError, e.getMessage());
         }
@@ -57,7 +55,7 @@ public class MachineController {
         }
     }
 
-    @PostMapping("/removeGoods")
+    @PostMapping("/remove-goods")
     public Object removeGoods(@RequestBody MachineGoodsBinding binding) {
         try {
             machineService.removeGoods(binding);
@@ -67,30 +65,15 @@ public class MachineController {
         }
     }
 
-    @PostMapping("/upload-order")
-    public Object createOrder(@RequestBody GoodsOrder goodsOrder, HttpServletRequest request) {
+    @PostMapping("/upload-status")
+    public Object uploadStatus(@RequestBody VendingMachine machine){
         try {
-            machineService.addOrder(goodsOrder);
-            String codeUrl;
-            //wx
-            if (goodsOrder.getPayment() == 0) {
-                codeUrl = paymentService.wxPay(goodsOrder, request.getRemoteHost());
-            } else {
-                codeUrl = paymentService.aliPay(goodsOrder);
-            }
-            return BaseResponse.success(codeUrl);
+            VendingMachine m = machineService.updateStatus(machine);
+            m.setMerchant(null);
+            m.setMaster(null);
+            return BaseResponse.success(m);
         } catch (Exception e) {
-            return BaseResponse.error(ErrorCodes.createOrderError, e.getMessage());
-        }
-    }
-
-    @GetMapping("/get-order")
-    public Object updateStatus(String barCode) {
-        try {
-            GoodsOrder order = orderService.getOrderByGoodsBarCode(barCode);
-            return BaseResponse.success(order);
-        } catch (Exception e) {
-            return BaseResponse.error(ErrorCodes.queryOrderError, e.getMessage());
+            return BaseResponse.error(ErrorCodes.uploadStatusError, e.getMessage());
         }
     }
 }

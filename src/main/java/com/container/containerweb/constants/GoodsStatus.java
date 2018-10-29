@@ -2,11 +2,13 @@ package com.container.containerweb.constants;
 
 public enum GoodsStatus {
     //已生产
-    PRODUCED(1000),
+    PRODUCED(3000),
     //已入库
-    STORED(1001),
+    STORED(3001),
     //售出
-    SOLD(1002);
+    SOLD(3002),
+    //出库
+    OUT(3003);
 
     private int code;
 

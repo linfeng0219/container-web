@@ -25,6 +25,8 @@ public class GoodsOrder {
 
     private Integer payment;//单位‘分’
 
+    private Integer status;
+
     public Long getId() {
         return id;
     }
@@ -87,5 +89,13 @@ public class GoodsOrder {
 
     public void setMachineSerial(String machineSerial) {
         this.machineSerial = machineSerial;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
