@@ -18,6 +18,8 @@ public class Goods {
 
     private String comment;
 
+    private String batchNo;
+
     @ManyToOne
     private GoodsDescription goodsDescription;
 
@@ -88,5 +90,13 @@ public class Goods {
 
     public void setGoodsDescription(GoodsDescription goodsDescription) {
         this.goodsDescription = goodsDescription;
+    }
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
     }
 }

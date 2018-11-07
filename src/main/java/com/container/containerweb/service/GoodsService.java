@@ -11,13 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.annotation.Resource;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +30,9 @@ public class GoodsService {
     @Value("${web.upload.img}")
     private String imgPath;
 
-    public void addGoods(List<GoodsAmountDto> dtos) {
+    public List<Goods> addGoods(List<GoodsAmountDto> dtos) {
+        List<Goods> all = new ArrayList<>();
+        String batchNo = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         for (GoodsAmountDto dto : dtos) {
             List<Goods> goodsList = new ArrayList<>();
             GoodsDescription description = goodsDescDao.findOne(dto.getId());
@@ -41,10 +40,15 @@ public class GoodsService {
                 Goods goods = new Goods();
                 goods.setGoodsDescription(description);
                 goods.setStatus(GoodsStatus.PRODUCED.getCode());
+                goods.setBarcode(Long.toString(System.nanoTime()));
+                goods.setBatchNo(batchNo);
+                goods.setCreateTime(System.currentTimeMillis());
                 goodsList.add(goods);
                 goodsDao.save(goodsList);
+                all.addAll(goodsList);
             }
         }
+        return all;
     }
 
     public void saveGoods(Goods goods) {
@@ -53,5 +57,14 @@ public class GoodsService {
 
     public Page<Goods> getPage(QueryGoodsDto dto) {
         return goodsDao.findAll(new PageRequest(dto.getPage() - 1, dto.getSize()));
+    }
+
+    public List<Goods> getGoodsByBatchNo(String batchNo) {
+        List<Goods> goodsList = goodsDao.findByBatchNo(batchNo);
+        for (Goods goods : goodsList) {
+            goods.setGoodsDescription(null);
+            goods.setVendingMachine(null);
+        }
+        return goodsList;
     }
 }

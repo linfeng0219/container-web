@@ -32,8 +32,8 @@ public class GoodsController {
             for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
                 list.add(new GoodsAmountDto(entry.getKey(), entry.getValue()));
             }
-            goodsService.addGoods(list);
-            return BaseResponse.success();
+            List<Goods> res = goodsService.addGoods(list);
+            return BaseResponse.success(res);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.addGoodsError, e.getMessage());
         }
@@ -46,6 +46,16 @@ public class GoodsController {
             return BaseResponse.success(data);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryGoodsError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/batchNo")
+    public Object getGoodsByBatchNo(String batchNo){
+        try {
+            List<Goods> goodsList = goodsService.getGoodsByBatchNo(batchNo);
+            return BaseResponse.success(goodsList);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryOrderError, e.getMessage());
         }
     }
 }

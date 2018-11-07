@@ -3,8 +3,11 @@ package com.container.containerweb.service;
 import com.container.containerweb.constants.OrderStatus;
 import com.container.containerweb.dao.GoodsDao;
 import com.container.containerweb.dao.GoodsOrderDao;
+import com.container.containerweb.dto.QueryOrderDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.GoodsOrder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -56,5 +59,9 @@ public class GoodsOrderService {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public Page<GoodsOrder> getPage(QueryOrderDto dto) {
+        return goodsOrderDao.findAll(new PageRequest(dto.getPage() - 1, dto.getSize()));
     }
 }

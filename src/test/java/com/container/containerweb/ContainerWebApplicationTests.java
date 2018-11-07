@@ -9,8 +9,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 //@SpringBootTest
 public class ContainerWebApplicationTests {
 
-    @Test
-    public void contextLoads() {
+//    @Test
+public static void main(String[] args)  {
+        for (int i = 0; i < 100; i++) {
+            System.out.println(System.nanoTime());
+        }
     }
 
 }

@@ -9,5 +9,7 @@ public interface GoodsDao extends JpaRepository<Goods, Long> {
     List<Goods> findByBarcodeIn(List<String> codes);
 
     Goods findByBarcodeAndIdx(String code, String idx);
+
+    List<Goods> findByBatchNo(String batchNo);
 }
 
