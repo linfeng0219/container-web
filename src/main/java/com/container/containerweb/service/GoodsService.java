@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class GoodsService {
 
     public List<Goods> addGoods(List<GoodsAmountDto> dtos) {
         List<Goods> all = new ArrayList<>();
-        String batchNo = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String batchNo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         for (GoodsAmountDto dto : dtos) {
             List<Goods> goodsList = new ArrayList<>();
             GoodsDescription description = goodsDescDao.findOne(dto.getId());
