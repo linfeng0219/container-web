@@ -15,6 +15,7 @@ import com.github.wxpay.sdk.WXPayConstants;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class PaymentService {
         Map<String, String> bizContent = new HashMap<>();
         bizContent.put("subject", order.getGoods().getGoodsDescription().getDescription());
         bizContent.put("out_trade_no", order.getOrderNo());
-        bizContent.put("total_amount", new StringBuffer(order.getPayment().toString()).insert(2, ".").toString());
+        bizContent.put("total_amount", String.format("%.2f", order.getPayment() * 0.01));
         request.setBizContent(objectMapper.writeValueAsString(bizContent));
 //通过alipayClient调用API，获得对应的response类
         AlipayTradePrecreateResponse response = alipayClient.execute(request);

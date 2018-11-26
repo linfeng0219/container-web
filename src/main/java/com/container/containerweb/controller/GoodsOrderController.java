@@ -61,7 +61,16 @@ public class GoodsOrderController {
         }
     }
 
-    @RequestMapping(value = "/paid-callback", consumes = {"application/xml"})
+    @RequestMapping(value = "/alipay-paid-callback", consumes = {"application/xml"})
+    public Object alipayCallback(HttpServletRequest request) {
+        try {
+
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/wx-paid-callback", consumes = {"application/xml"})
     public Object callback(@RequestBody WxCallbackXmlDto xmlDto) {
         try {
             if (xmlDto.tradeSuccess()) {
