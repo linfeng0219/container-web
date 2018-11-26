@@ -12,14 +12,11 @@ import com.container.containerweb.model.biz.VendingMachine;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.alipay.api.AlipayConstants.CHARSET;
 
 @Service
 public class PaymentService {
@@ -29,10 +26,6 @@ public class PaymentService {
 
     @Resource
     private MachineDao machineDao;
-
-    @Value("${alipay_public_key}")
-    private String alipayPublicKey;
-
 
     public String wxPay(GoodsOrder order, String ip) throws Exception {
         VendingMachine machine = machineDao.findBySerial(order.getMachineSerial());
@@ -65,7 +58,9 @@ public class PaymentService {
 
         String appPrivateKey = tenant.getAlipayPrivateKey();
 
-        AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", appId, appPrivateKey, "json", CHARSET, alipayPublicKey, "RSA2");  //获得初始化的AlipayClient
+        String appPublicKey = tenant.getAlipayPublicKey();
+
+        AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", appId, appPrivateKey, "json", "utf-8", appPublicKey, "RSA2");  //获得初始化的AlipayClient
 //创建API对应的request类
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         Map<String, String> bizContent = new HashMap<>();

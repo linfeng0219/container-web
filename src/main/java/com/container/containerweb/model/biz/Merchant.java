@@ -20,6 +20,8 @@ public class Merchant {
 
     private String alipayAppId;
 
+    private String alipayPublicKey;
+
     private String alipayPrivateKey;
 
     private String alipayCallbackUrl;
@@ -127,5 +129,13 @@ public class Merchant {
 
     public void setWxCallbackUrl(String wxCallbackUrl) {
         this.wxCallbackUrl = wxCallbackUrl;
+    }
+
+    public String getAlipayPublicKey() {
+        return alipayPublicKey;
+    }
+
+    public void setAlipayPublicKey(String alipayPublicKey) {
+        this.alipayPublicKey = alipayPublicKey;
     }
 }
