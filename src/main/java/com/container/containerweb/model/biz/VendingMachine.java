@@ -26,6 +26,7 @@ public class VendingMachine {
     private Long createTime;
 
     @OneToMany
+    @JoinColumn(name="vending_machine_id")
     private List<Goods> goods;
 
     @ManyToOne

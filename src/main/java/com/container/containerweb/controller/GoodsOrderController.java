@@ -61,7 +61,7 @@ public class GoodsOrderController {
         }
     }
 
-    @RequestMapping(value = "/alipay-paid-callback", consumes = {"application/xml"})
+    @RequestMapping(value = "/alipay-paid-callback")
     public Object alipayCallback(HttpServletRequest request) {
         try {
 
