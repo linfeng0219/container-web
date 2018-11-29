@@ -1,5 +1,7 @@
 package com.container.containerweb.model.biz;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Table
@@ -26,6 +28,7 @@ public class Goods {
     private String idx;
 
     @ManyToOne
+    @JsonIgnore
     private VendingMachine vendingMachine;
 
     public Long getId() {
