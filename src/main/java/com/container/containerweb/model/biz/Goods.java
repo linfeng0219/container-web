@@ -25,9 +25,6 @@ public class Goods {
 
     private String idx;
 
-    @ManyToOne
-    private VendingMachine vendingMachine;
-
     public Long getId() {
         return id;
     }
@@ -66,14 +63,6 @@ public class Goods {
 
     public void setBarcode(String barcode) {
         this.barcode = barcode;
-    }
-
-    public VendingMachine getVendingMachine() {
-        return vendingMachine;
-    }
-
-    public void setVendingMachine(VendingMachine vendingMachine) {
-        this.vendingMachine = vendingMachine;
     }
 
     public String getIdx() {

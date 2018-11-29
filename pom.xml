@@ -89,6 +89,7 @@
         </plugins>
     </build>
 
+
     <repositories>
         <repository>
             <id>spring-snapshots</id>
@@ -96,6 +97,7 @@
             <url>https://repo.spring.io/snapshot</url>
             <snapshots>
                 <enabled>true</enabled>
+
             </snapshots>
         </repository>
         <repository>

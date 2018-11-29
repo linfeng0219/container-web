@@ -63,7 +63,7 @@ public class GoodsService {
         List<Goods> goodsList = goodsDao.findByBatchNo(batchNo);
         for (Goods goods : goodsList) {
             goods.setGoodsDescription(null);
-            goods.setVendingMachine(null);
+            //goods.setVendingMachine(null);
         }
         return goodsList;
     }

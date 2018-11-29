@@ -43,7 +43,7 @@ public class MachineService {
         List<Goods> goods = goodsDao.findByBarcodeIn(binding.getCodes());
         VendingMachine machine = machineDao.findBySerial(binding.getSerial());
         goods.forEach(e -> {
-            e.setVendingMachine(machine);
+            //e.setVendingMachine(machine);
             e.setStatus(GoodsStatus.STORED.getCode());
             binding.getIdxCode().forEach(r -> {
                 if (Objects.equals(r.getCode(), e.getBarcode())) {
@@ -58,7 +58,7 @@ public class MachineService {
         GoodsIdxCode idxCode = binding.getIdxCode().get(0);
         Goods goods = goodsDao.findByBarcodeAndIdx(idxCode.getCode(), idxCode.getIndex());
         if (goods != null) {
-            goods.setVendingMachine(null);
+            //goods.setVendingMachine(null);
             goods.setStatus(GoodsStatus.SOLD.getCode());
             goodsDao.save(goods);
         } else {
