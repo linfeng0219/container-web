@@ -168,15 +168,15 @@ public class RbacService {
         return resourceDtoList;
     }
 
-    public Page<UserDto> getUserList(Pageable pageable) {
-        Page<User> userPage = userDao.findAll(pageable);
-        List<UserDto> content = new ArrayList<>(userPage.getContent().size());
-        for (User user : userPage.getContent()) {
+    public List<UserDto> getUserList(Pageable pageable) {
+        List<User> list = userDao.findAll();
+        List<UserDto> content = new ArrayList<>(list.size());
+        for (User user : list) {
             UserDto dto = new UserDto(user.getId(), user.getName(), user.getPhone());
             dto.setRoles(parseRoleListToRoleDtoList(user.getRoles()));
             content.add(dto);
         }
-        return new PageImpl<>(content);
+        return content;
     }
 
     public RoleDto queryRole(Integer id) {
@@ -187,5 +187,9 @@ public class RbacService {
     public List<ResourceDto> getResourceList() {
         List<Resource> resources = resourceDao.findAll();
         return parseResourceListToResourceDtoList(resources);
+    }
+
+    public User queryUserById(Integer userId) {
+        return userDao.findById(userId);
     }
 }

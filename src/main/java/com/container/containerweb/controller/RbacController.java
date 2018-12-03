@@ -6,7 +6,6 @@ import com.container.containerweb.dto.*;
 import com.container.containerweb.model.rbac.Role;
 import com.container.containerweb.model.rbac.User;
 import com.container.containerweb.service.RbacService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,7 +87,7 @@ public class RbacController {
     @GetMapping("/user/list")
     public Object userList(@PageableDefault Pageable pageable) {
         try {
-            Page<UserDto> users = rbacService.getUserList(pageable);
+            List<UserDto> users = rbacService.getUserList(pageable);
             return BaseResponse.success(users);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryUserError, e.getMessage());

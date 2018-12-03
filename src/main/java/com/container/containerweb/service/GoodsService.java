@@ -7,6 +7,8 @@ import com.container.containerweb.dto.GoodsAmountDto;
 import com.container.containerweb.dto.QueryGoodsDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.GoodsDescription;
+import com.container.containerweb.model.biz.VendingMachine;
+import com.container.containerweb.model.rbac.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -66,5 +68,14 @@ public class GoodsService {
             goods.setVendingMachine(null);
         }
         return goodsList;
+    }
+
+    public int setGoodsDeliveryman(User user, VendingMachine machine, List<Long> goods) {
+        List<Goods> _list = goodsDao.findAll(goods);
+        for (Goods _g : _list) {
+            _g.setDeliveryman(user);
+            _g.setVendingMachine(machine);
+        }
+        return goodsDao.save(_list).size();
     }
 }

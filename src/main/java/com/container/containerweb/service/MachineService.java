@@ -2,11 +2,13 @@ package com.container.containerweb.service;
 
 import com.container.containerweb.constants.GoodsStatus;
 import com.container.containerweb.constants.MachineStatus;
-import com.container.containerweb.dao.*;
+import com.container.containerweb.dao.GoodsDao;
+import com.container.containerweb.dao.MachineDao;
+import com.container.containerweb.dao.MerchantDao;
+import com.container.containerweb.dao.UserDao;
 import com.container.containerweb.dto.GoodsIdxCode;
 import com.container.containerweb.dto.MachineGoodsBinding;
 import com.container.containerweb.model.biz.Goods;
-import com.container.containerweb.model.biz.GoodsOrder;
 import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 public class MachineService {
@@ -31,9 +32,6 @@ public class MachineService {
 
     @Resource
     private UserDao userDao;
-
-    @Resource
-    private GoodsOrderDao goodsOrderDao;
 
     public List<VendingMachine> getMachineList() {
         return machineDao.findAll();
@@ -86,5 +84,9 @@ public class MachineService {
         one.setUpdateTime(System.currentTimeMillis());
         one.setTemperature(machine.getTemperature());
         return machineDao.save(one);
+    }
+
+    public VendingMachine queryBySerial(String serial) {
+        return machineDao.findBySerial(serial);
     }
 }

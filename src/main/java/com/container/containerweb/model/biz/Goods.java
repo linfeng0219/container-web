@@ -1,5 +1,6 @@
 package com.container.containerweb.model.biz;
 
+import com.container.containerweb.model.rbac.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -30,6 +31,16 @@ public class Goods {
     @ManyToOne
     @JsonIgnore
     private VendingMachine vendingMachine;
+
+    @ManyToOne
+    private User deliveryman;
+
+    public Goods() {
+    }
+
+    public Goods(int status) {
+        this.status = status;
+    }
 
     public Long getId() {
         return id;
@@ -101,5 +112,13 @@ public class Goods {
 
     public void setBatchNo(String batchNo) {
         this.batchNo = batchNo;
+    }
+
+    public User getDeliveryman() {
+        return deliveryman;
+    }
+
+    public void setDeliveryman(User deliveryman) {
+        this.deliveryman = deliveryman;
     }
 }

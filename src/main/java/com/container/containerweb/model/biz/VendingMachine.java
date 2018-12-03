@@ -25,10 +25,6 @@ public class VendingMachine {
 
     private Long createTime;
 
-    @OneToMany
-    @JoinColumn(name="vending_machine_id")
-    private List<Goods> goods;
-
     @ManyToOne
     private Merchant merchant;
 
@@ -89,14 +85,6 @@ public class VendingMachine {
 
     public void setMaster(User master) {
         this.master = master;
-    }
-
-    public List<Goods> getGoods() {
-        return goods;
-    }
-
-    public void setGoods(List<Goods> goods) {
-        this.goods = goods;
     }
 
     public Merchant getMerchant() {
