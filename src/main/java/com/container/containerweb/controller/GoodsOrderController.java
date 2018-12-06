@@ -36,7 +36,10 @@ public class GoodsOrderController {
     public Object orderPage(QueryOrderDto dto) {
         try {
             Page<GoodsOrder> orders = goodsOrderService.getPage(dto);
-            return BaseResponse.success(orders);
+            String amount = goodsOrderService.totalProfit(dto);
+            BaseResponse response = BaseResponse.success(orders);
+            response.setMsg(amount);
+            return response;
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryOrderError, e.getMessage());
         }
@@ -102,7 +105,7 @@ public class GoodsOrderController {
                     if (!String.format("%.2f", order.getPayment() * 0.01).equals(totalAmount)) {
                         return "success";
                     }
-                    if (!merchant.getAlipayAppId().equals(paramsMap.get("app_id"))){
+                    if (!merchant.getAlipayAppId().equals(paramsMap.get("app_id"))) {
                         return "success";
                     }
                     goodsOrderService.finishOrder(order);
