@@ -31,6 +31,9 @@ public class VendingMachine {
     @OneToOne
     private User master;//负责人
 
+    @Transient
+    private List<Goods> goods;
+
     public Integer getId() {
         return id;
     }
@@ -101,5 +104,13 @@ public class VendingMachine {
 
     public void setTemperature(Integer temperature) {
         this.temperature = temperature;
+    }
+
+    public List<Goods> getGoods() {
+        return goods;
+    }
+
+    public void setGoods(List<Goods> goods) {
+        this.goods = goods;
     }
 }
