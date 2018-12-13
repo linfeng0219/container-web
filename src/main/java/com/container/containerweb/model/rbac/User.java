@@ -94,4 +94,12 @@ public class User {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    public User simple() {
+        this.setRoles(null);
+        this.setPassword(null);
+        this.setPhone(null);
+        this.setGender(null);
+        return this;
+    }
 }

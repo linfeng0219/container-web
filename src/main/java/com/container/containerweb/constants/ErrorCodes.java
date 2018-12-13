@@ -25,4 +25,5 @@ public final class ErrorCodes {
     public static int addGoodsDescError = 1021;
     public static int queryGoodsError = 1022;
     public static int uploadStatusError = 1023;
+    public static int saveDeliverymanError = 1024;
 }

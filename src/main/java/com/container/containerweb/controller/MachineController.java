@@ -3,7 +3,9 @@ package com.container.containerweb.controller;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
+import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
+import com.container.containerweb.model.rbac.User;
 import com.container.containerweb.service.GoodsOrderService;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.PaymentService;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/machine")
@@ -29,6 +32,16 @@ public class MachineController {
     public Object list() {
         try {
             List<VendingMachine> list = machineService.getMachineList();
+            list = list.stream().peek(e -> {
+                Merchant _m = new Merchant();
+                _m.setName(e.getMerchant().getName());
+                e.setMerchant(_m);
+
+                User _master = e.getMaster();
+                if (_master != null){
+                    e.setMaster(_master.simple());
+                }
+            }).collect(Collectors.toList());
             return BaseResponse.success(list);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryMachineError, e.getMessage());
@@ -66,7 +79,7 @@ public class MachineController {
     }
 
     @PostMapping("/upload-status")
-    public Object uploadStatus(@RequestBody VendingMachine machine){
+    public Object uploadStatus(@RequestBody VendingMachine machine) {
         try {
             VendingMachine m = machineService.updateStatus(machine);
             m.setMerchant(null);
