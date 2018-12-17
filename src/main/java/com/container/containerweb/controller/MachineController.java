@@ -3,10 +3,12 @@ package com.container.containerweb.controller;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
+import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
 import com.container.containerweb.service.GoodsOrderService;
+import com.container.containerweb.service.GoodsService;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +25,7 @@ public class MachineController {
     private MachineService machineService;
 
     @Resource
-    private PaymentService paymentService;
-
-    @Resource
-    private GoodsOrderService orderService;
+    private GoodsService goodsService;
 
     @GetMapping("/list")
     public Object list() {
@@ -82,6 +81,8 @@ public class MachineController {
     public Object uploadStatus(@RequestBody VendingMachine machine) {
         try {
             VendingMachine m = machineService.updateStatus(machine);
+            List<Goods> goodsList = goodsService.getGoodsByMachine(m);
+            m.setGoods(goodsList);
             m.setMerchant(null);
             m.setMaster(null);
             return BaseResponse.success(m);

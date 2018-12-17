@@ -11,5 +11,7 @@ public interface GoodsDao extends JpaRepository<Goods, Long> {
     Goods findByBarcodeAndIdx(String code, String idx);
 
     List<Goods> findByBatchNo(String batchNo);
+
+    List<Goods> findByVendingMachineId(int machineId);
 }
 

@@ -85,4 +85,8 @@ public class GoodsService {
         }
         return goodsDao.save(_list).size();
     }
+
+    public List<Goods> getGoodsByMachine(VendingMachine m) {
+        return goodsDao.findByVendingMachineId(m.getId());
+    }
 }
