@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
@@ -33,8 +34,10 @@ public class GoodsOrderController {
     private MachineService machineService;
 
     @GetMapping("/page")
-    public Object orderPage(QueryOrderDto dto) {
+    public Object orderPage(QueryOrderDto dto, HttpSession session) {
         try {
+            Integer merchantId = (Integer) session.getAttribute("merchantId");
+            dto.setMerchantId(merchantId);
             Page<GoodsOrder> orders = goodsOrderService.getPage(dto);
             String amount = goodsOrderService.totalProfit(dto);
             BaseResponse response = BaseResponse.success(orders);

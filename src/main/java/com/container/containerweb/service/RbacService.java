@@ -123,7 +123,7 @@ public class RbacService {
         if (user == null)
             throw new IllegalAccessException("用户名或密码错误");
 
-        UserDto userDto = new UserDto(user.getId(), user.getName());
+        UserDto userDto = new UserDto(user.getId(), user.getName(), user.getMerchant().getId());
         userDto.setRoles(this.parseRoleListToRoleDtoList(user.getRoles()));
         return userDto;
     }

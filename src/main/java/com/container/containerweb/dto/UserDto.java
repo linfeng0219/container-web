@@ -11,6 +11,8 @@ public class UserDto {
 
     private String password;
 
+    private Integer merchantId;
+
     public String getPhone() {
         return phone;
     }
@@ -21,8 +23,9 @@ public class UserDto {
 
     private List<RoleDto> roles;
 
-    public UserDto(Integer id, String name) {
+    public UserDto(Integer id, String name, Integer merchantId) {
         this.id = id;
+        this.merchantId = merchantId;
         this.name = name;
     }
 
@@ -62,5 +65,13 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
     }
 }

@@ -1,5 +1,8 @@
 package com.container.containerweb.model.rbac;
 
+import com.container.containerweb.model.biz.Merchant;
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -24,6 +27,9 @@ public class User {
 
     @ManyToMany
     private List<Role> roles;
+
+    @ManyToOne
+    private Merchant merchant;
 
     public User(String name, String password) {
         this.name = name;
@@ -101,5 +107,13 @@ public class User {
         this.setPhone(null);
         this.setGender(null);
         return this;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 }
