@@ -11,5 +11,5 @@ import java.util.List;
 public interface MachineDao extends JpaRepository<VendingMachine, Integer> {
     VendingMachine findBySerial(String serial);
 
-    List<VendingMachine> findByMerchant(Merchant merchant);
+    List<VendingMachine> findByMerchantId(Integer merchantId);
 }

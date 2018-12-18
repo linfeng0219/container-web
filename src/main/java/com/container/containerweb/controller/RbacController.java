@@ -28,6 +28,7 @@ public class RbacController {
         try {
             UserDto user = rbacService.login(dto.getUsername(), dto.getPassword());
             session.setAttribute("user", user);
+            session.setAttribute("merchantId", user.getMerchantId());
             return BaseResponse.success(user);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.loginError, e.getMessage());

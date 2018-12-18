@@ -3,17 +3,17 @@ package com.container.containerweb.controller;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
+import com.container.containerweb.dto.UserDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
-import com.container.containerweb.service.GoodsOrderService;
 import com.container.containerweb.service.GoodsService;
 import com.container.containerweb.service.MachineService;
-import com.container.containerweb.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +28,10 @@ public class MachineController {
     private GoodsService goodsService;
 
     @GetMapping("/list")
-    public Object list() {
+    public Object list(HttpSession session) {
         try {
-            List<VendingMachine> list = machineService.getMachineList();
+            Integer merchantId = (Integer) session.getAttribute("merchantId");
+            List<VendingMachine> list = machineService.getMachineListOfMerchant(merchantId);
             list = list.stream().peek(e -> {
                 Merchant _m = new Merchant();
                 _m.setName(e.getMerchant().getName());

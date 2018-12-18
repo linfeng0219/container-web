@@ -3,8 +3,11 @@ package com.container.containerweb.service;
 import com.container.containerweb.constants.GoodsStatus;
 import com.container.containerweb.dao.GoodsDao;
 import com.container.containerweb.dao.GoodsDescDao;
+import com.container.containerweb.dao.MachineDao;
+import com.container.containerweb.dao.UserDao;
 import com.container.containerweb.dto.GoodsAmountDto;
 import com.container.containerweb.dto.QueryGoodsDto;
+import com.container.containerweb.dto.UserDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.GoodsDescription;
 import com.container.containerweb.model.biz.VendingMachine;
@@ -30,11 +33,25 @@ public class GoodsService {
     @Resource
     private GoodsDescDao goodsDescDao;
 
+    @Resource
+    private UserDao userDao;
+
+    @Resource
+    private MachineDao machineDao;
+
     @Value("${web.upload.img}")
     private String imgPath;
 
-    public List<Goods> addGoods(List<GoodsAmountDto> dtos) {
+    public List<Goods> addGoods(List<GoodsAmountDto> dtos, String deliverymanId, String machineId) {
         List<Goods> all = new ArrayList<>();
+        User deliveryman = userDao.findById(Integer.valueOf(deliverymanId));
+        if (deliveryman == null) {
+            throw new NullPointerException("送货员不存在");
+        }
+        VendingMachine machine = machineDao.findOne(Integer.valueOf(machineId));
+        if (machine == null) {
+            throw new NullPointerException("机柜不存在");
+        }
         String batchNo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         for (GoodsAmountDto dto : dtos) {
             List<Goods> goodsList = new ArrayList<>();
@@ -46,6 +63,8 @@ public class GoodsService {
                 goods.setBarcode(Long.toString(System.nanoTime()));
                 goods.setBatchNo(batchNo);
                 goods.setCreateTime(System.currentTimeMillis());
+                goods.setDeliveryman(deliveryman);
+                goods.setVendingMachine(machine);
                 goodsList.add(goods);
                 goodsDao.save(goodsList);
                 all.addAll(goodsList);
@@ -58,13 +77,11 @@ public class GoodsService {
 
     }
 
-    public Page<Goods> getPage(QueryGoodsDto dto) {
+    public Page<Goods> getPageOfMerchantId(QueryGoodsDto dto, Integer merchantId) {
         if (dto.getStatus() != 0) {
-            Goods goods = new Goods(dto.getStatus());
-            Example<Goods> example = Example.of(goods);
-            return goodsDao.findAll(example, new PageRequest(dto.getPage() - 1, dto.getSize()));
+            return goodsDao.findByVendingMachineMerchantIdAndStatus(merchantId, dto.getStatus(), new PageRequest(dto.getPage() - 1, dto.getSize()));
         }
-        return goodsDao.findAll(new PageRequest(dto.getPage() - 1, dto.getSize()));
+        return goodsDao.findByVendingMachineMerchantId(merchantId, new PageRequest(dto.getPage() - 1, dto.getSize()));
     }
 
     public List<Goods> getGoodsByBatchNo(String batchNo) {

@@ -1,6 +1,8 @@
 package com.container.containerweb.dao;
 
 import com.container.containerweb.model.biz.Goods;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,5 +15,9 @@ public interface GoodsDao extends JpaRepository<Goods, Long> {
     List<Goods> findByBatchNo(String batchNo);
 
     List<Goods> findByVendingMachineId(int machineId);
+
+    Page<Goods> findByVendingMachineMerchantId(Integer merchantId, Pageable pageable);
+
+    Page<Goods> findByVendingMachineMerchantIdAndStatus(Integer merchantId, Integer status,Pageable pageable);
 }
 

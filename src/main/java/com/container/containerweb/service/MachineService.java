@@ -8,13 +8,16 @@ import com.container.containerweb.dao.MerchantDao;
 import com.container.containerweb.dao.UserDao;
 import com.container.containerweb.dto.GoodsIdxCode;
 import com.container.containerweb.dto.MachineGoodsBinding;
+import com.container.containerweb.dto.UserDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,8 +36,8 @@ public class MachineService {
     @Resource
     private UserDao userDao;
 
-    public List<VendingMachine> getMachineList() {
-        return machineDao.findAll();
+    public List<VendingMachine> getMachineListOfMerchant(Integer merchantId) {
+        return machineDao.findByMerchantId(merchantId);
     }
 
     public void storeGoods(MachineGoodsBinding binding) {

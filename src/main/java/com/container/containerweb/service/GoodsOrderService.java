@@ -96,8 +96,7 @@ public class GoodsOrderService {
             if (dto.getMachineSerial() != null) {
                 predicates.add(cb.equal(root.get("machineSerial").as(String.class), dto.getMachineSerial()));
             } else if (dto.getMerchantId() != null) {
-                Merchant merchant = merchantDao.findOne(dto.getMerchantId());
-                List<VendingMachine> machines = machineDao.findByMerchant(merchant);
+                List<VendingMachine> machines = machineDao.findByMerchantId(dto.getMerchantId());
                 List<String> serials = machines.stream().map(VendingMachine::getSerial).collect(Collectors.toList());
                 predicates.add(root.get("machineSerial").in(serials));
             }
@@ -124,8 +123,7 @@ public class GoodsOrderService {
     public String totalProfit(QueryOrderDto dto) {
         StringBuilder sql = new StringBuilder("select sum(payment) from goods_order where status=1000 ");
         if (dto.getMerchantId() != null) {
-            Merchant merchant = merchantDao.findOne(dto.getMerchantId());
-            List<VendingMachine> machines = machineDao.findByMerchant(merchant);
+            List<VendingMachine> machines = machineDao.findByMerchantId(dto.getMerchantId());
             List<String> serials = machines.stream().map(VendingMachine::getSerial).collect(Collectors.toList());
             sql.append("and machine_serial in (");
             for (String serial : serials) {

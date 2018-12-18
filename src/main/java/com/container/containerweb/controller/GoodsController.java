@@ -12,9 +12,11 @@ import com.container.containerweb.service.GoodsService;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.RbacService;
 import org.springframework.data.domain.Page;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +35,20 @@ public class GoodsController {
     private MachineService machineService;
 
     @PostMapping("/add")
-    public Object addGoods(@RequestBody Map<Integer, Integer> map) {
+    public Object addGoods(@RequestBody Map<String, String> map) {
         try {
             List<GoodsAmountDto> list = new ArrayList<>(map.size());
-            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-                list.add(new GoodsAmountDto(entry.getKey(), entry.getValue()));
+            String deliverymanId = map.get("deliverymanId");
+            String machineId = map.get("machineId");
+            if (StringUtils.isEmpty(deliverymanId) || StringUtils.isEmpty(machineId)){
+                throw new IllegalArgumentException("缺少送货员或机柜");
             }
-            List<Goods> res = goodsService.addGoods(list);
+            map.remove("deliverymanId");
+            map.remove("machineId");
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                list.add(GoodsAmountDto.newGoodsAmountDto(entry.getKey(), entry.getValue()));
+            }
+            List<Goods> res = goodsService.addGoods(list, deliverymanId, machineId);
             return BaseResponse.success(res);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.addGoodsError, e.getMessage());
@@ -47,9 +56,10 @@ public class GoodsController {
     }
 
     @GetMapping("/page")
-    public Object page(QueryGoodsDto dto) {
+    public Object page(QueryGoodsDto dto, HttpSession session) {
         try {
-            Page<Goods> data = goodsService.getPage(dto);
+            Integer merchantId = (Integer) session.getAttribute("merchantId");
+            Page<Goods> data = goodsService.getPageOfMerchantId(dto, merchantId);
             return BaseResponse.success(data);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryGoodsError, e.getMessage());
