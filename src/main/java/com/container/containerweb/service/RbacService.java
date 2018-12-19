@@ -41,7 +41,7 @@ public class RbacService {
     @Transactional
     public void updateUser(User user) {
         if (user.getId() != null)
-            userDao.updateUser(user.getId(), user.getName(), user.getPhone());
+            userDao.updateUser(user.getId(), user.getName(), user.getPhone(), user.getMerchant().getId());
         else
             throw new IllegalArgumentException("user id cannot be null");
     }
@@ -123,7 +123,7 @@ public class RbacService {
         if (user == null)
             throw new IllegalAccessException("用户名或密码错误");
 
-        UserDto userDto = new UserDto(user.getId(), user.getName(), user.getMerchant().getId());
+        UserDto userDto = new UserDto(user.getId(), user.getName(), user.getMerchant());
         userDto.setRoles(this.parseRoleListToRoleDtoList(user.getRoles()));
         return userDto;
     }
@@ -173,6 +173,8 @@ public class RbacService {
         List<UserDto> content = new ArrayList<>(list.size());
         for (User user : list) {
             UserDto dto = new UserDto(user.getId(), user.getName(), user.getPhone());
+            if (user.getMerchant() != null)
+                dto.setMerchant(user.getMerchant().simple());
             dto.setRoles(parseRoleListToRoleDtoList(user.getRoles()));
             content.add(dto);
         }

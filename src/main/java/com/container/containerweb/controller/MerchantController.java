@@ -46,5 +46,13 @@ public class MerchantController {
         }
     }
 
-
+    @DeleteMapping("/delete")
+    public Object delete(Integer id){
+        try {
+            merchantService.deleteById(id);
+            return BaseResponse.success();
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.deleteMerchantError, e.getMessage());
+        }
+    }
 }

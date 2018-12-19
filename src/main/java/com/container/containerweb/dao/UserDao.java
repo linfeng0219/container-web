@@ -13,8 +13,8 @@ import java.util.List;
 public interface UserDao extends JpaRepository<User, Integer> {
 
     @Modifying
-    @Query("update User u set u.name = ?2 ,u.phone = ?3 where u.id = ?1")
-    void updateUser(int id, String name, String phone);
+    @Query("update User u set u.name = ?2 ,u.phone = ?3 , u.merchant.id = ?4 where u.id = ?1")
+    void updateUser(int id, String name, String phone, Integer merchantId);
 
     User findByNameAndPassword(String name, String password);
 

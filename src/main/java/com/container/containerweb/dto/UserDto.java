@@ -1,5 +1,7 @@
 package com.container.containerweb.dto;
 
+import com.container.containerweb.model.biz.Merchant;
+
 import java.util.List;
 
 public class UserDto {
@@ -11,7 +13,7 @@ public class UserDto {
 
     private String password;
 
-    private Integer merchantId;
+    private Merchant merchant;
 
     public String getPhone() {
         return phone;
@@ -23,9 +25,9 @@ public class UserDto {
 
     private List<RoleDto> roles;
 
-    public UserDto(Integer id, String name, Integer merchantId) {
+    public UserDto(Integer id, String name, Merchant merchant) {
         this.id = id;
-        this.merchantId = merchantId;
+        this.merchant = merchant;
         this.name = name;
     }
 
@@ -67,11 +69,11 @@ public class UserDto {
         this.password = password;
     }
 
-    public Integer getMerchantId() {
-        return merchantId;
+    public Merchant getMerchant() {
+        return merchant;
     }
 
-    public void setMerchantId(Integer merchantId) {
-        this.merchantId = merchantId;
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 }
