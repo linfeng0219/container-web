@@ -152,4 +152,11 @@ public class Merchant {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public Merchant simple(){
+        Merchant merchant = new Merchant();
+        merchant.setName(this.getName());
+        merchant.setId(this.getId());
+        return merchant;
+    }
 }

@@ -31,4 +31,8 @@ public class MerchantService {
         }
         return merchantDao.findByNameLike("%" + name + "%");
     }
+
+    public void deleteById(Integer id) {
+        this.merchantDao.delete(id);
+    }
 }

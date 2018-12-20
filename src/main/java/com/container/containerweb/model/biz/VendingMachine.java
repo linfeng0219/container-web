@@ -23,7 +23,11 @@ public class VendingMachine {
 
     private Integer temperature;
 
+    private Integer humidity;
+
     private Long createTime;
+
+    private Integer capacity;
 
     @ManyToOne
     private Merchant merchant;
@@ -112,5 +116,21 @@ public class VendingMachine {
 
     public void setGoods(List<Goods> goods) {
         this.goods = goods;
+    }
+
+    public Integer getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(Integer humidity) {
+        this.humidity = humidity;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
     }
 }
