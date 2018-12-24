@@ -29,6 +29,8 @@ public class VendingMachine {
 
     private Integer capacity;
 
+    private Long exp;
+
     @ManyToOne
     private Merchant merchant;
 
@@ -132,5 +134,13 @@ public class VendingMachine {
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    public Long getExp() {
+        return exp;
+    }
+
+    public void setExp(Long exp) {
+        this.exp = exp;
     }
 }

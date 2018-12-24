@@ -106,4 +106,8 @@ public class GoodsService {
     public List<Goods> getGoodsByMachine(VendingMachine m) {
         return goodsDao.findByVendingMachineId(m.getId());
     }
+
+    public List<Goods> findCurrentBatchNoBySerial(String serial) {
+        return goodsDao.findByVendingMachineSerialAndStatus(serial, GoodsStatus.DELIVERING.getCode());
+    }
 }

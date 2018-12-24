@@ -3,7 +3,6 @@ package com.container.containerweb.controller;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
-import com.container.containerweb.dto.UserDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
@@ -38,7 +37,7 @@ public class MachineController {
                 e.setMerchant(_m);
 
                 User _master = e.getMaster();
-                if (_master != null){
+                if (_master != null) {
                     e.setMaster(_master.simple());
                 }
             }).collect(Collectors.toList());
@@ -89,6 +88,16 @@ public class MachineController {
             return BaseResponse.success(m);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.uploadStatusError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-current-batch-no")
+    public Object getCurrentBatchNo(String serial) {
+        try {
+            List<Goods> goodsList = goodsService.findCurrentBatchNoBySerial(serial);
+            return BaseResponse.success(goodsList);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryMachineError, e.getMessage());
         }
     }
 }
