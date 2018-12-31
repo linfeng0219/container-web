@@ -10,6 +10,8 @@ public class QueryOrderDto extends PageDto {
 
     private String machineSerial;
 
+    private Integer goodsDescId;
+
     public Long getFrom() {
         return from;
     }
@@ -40,5 +42,13 @@ public class QueryOrderDto extends PageDto {
 
     public void setMachineSerial(String machineSerial) {
         this.machineSerial = machineSerial;
+    }
+
+    public Integer getGoodsDescId() {
+        return goodsDescId;
+    }
+
+    public void setGoodsDescId(Integer goodsDescId) {
+        this.goodsDescId = goodsDescId;
     }
 }

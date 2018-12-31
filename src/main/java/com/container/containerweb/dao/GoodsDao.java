@@ -19,5 +19,7 @@ public interface GoodsDao extends JpaRepository<Goods, Long> {
     Page<Goods> findByVendingMachineMerchantId(Integer merchantId, Pageable pageable);
 
     Page<Goods> findByVendingMachineMerchantIdAndStatus(Integer merchantId, Integer status,Pageable pageable);
+
+    List<Goods> findByVendingMachineSerialAndStatus(String serial, int status);
 }
 

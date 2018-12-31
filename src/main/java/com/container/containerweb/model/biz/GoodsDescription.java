@@ -1,9 +1,6 @@
 package com.container.containerweb.model.biz;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Table
 @Entity
@@ -18,6 +15,9 @@ public class GoodsDescription {
     private String imageHash;
 
     private Integer price;
+
+    @ManyToOne
+    private Merchant merchant;
 
     public Integer getId() {
         return id;
@@ -49,5 +49,13 @@ public class GoodsDescription {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
     }
 }
