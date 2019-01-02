@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -51,15 +52,18 @@ public class GoodsOrderController {
     @PostMapping("/create-order")
     public Object createOrder(@RequestBody GoodsOrder goodsOrder, HttpServletRequest request) {
         try {
-            goodsOrderService.addOrder(goodsOrder);
+            GoodsOrder mGoodsOrder = goodsOrderService.addOrder(goodsOrder);
             String codeUrl;
+            Map<String,Object> rtnMap = new HashMap<String, Object>();
+            rtnMap.put("order",mGoodsOrder);
             //wx
             if (goodsOrder.getPaymentMode() == 0) {
                 codeUrl = paymentService.wxPay(goodsOrder, request.getRemoteHost());
             } else {
                 codeUrl = paymentService.aliPay(goodsOrder);
             }
-            return BaseResponse.success(codeUrl);
+            rtnMap.put("codeUrl",codeUrl);
+            return BaseResponse.success(rtnMap);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.createOrderError, e.getMessage());
         }
@@ -68,7 +72,7 @@ public class GoodsOrderController {
     @GetMapping("/get-order-status")
     public Object getOrder(String barcode) {
         try {
-            GoodsOrder order = goodsOrderService.getOrderByGoodsBarcode(barcode);
+            GoodsOrder order = goodsOrderService.getOrderByOrderNo(barcode);
             return BaseResponse.success(order);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryOrderError, e.getMessage());

@@ -66,7 +66,7 @@ public class GoodsOrderService {
         }
     }
 
-    public void addOrder(GoodsOrder order) {
+    public GoodsOrder addOrder(GoodsOrder order) {
         VendingMachine machine = machineDao.findBySerial(order.getMachineSerial());
         if (machine == null) {
             throw new IllegalArgumentException();
@@ -79,7 +79,7 @@ public class GoodsOrderService {
             order.setPayment(goods.getGoodsDescription().getPrice());
             order.setOrderNo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + goods.getVendingMachine().getId() + goods.getGoodsDescription().getId());
             order.setStatus(OrderStatus.UNPAID.getCode());
-            goodsOrderDao.save(order);
+            return goodsOrderDao.save(order);
         } else {
             throw new IllegalArgumentException();
         }
