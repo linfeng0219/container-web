@@ -12,9 +12,12 @@ import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.service.GoodsOrderService;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.PaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/order")
 public class GoodsOrderController {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private GoodsOrderService goodsOrderService;
 
@@ -93,9 +96,10 @@ public class GoodsOrderController {
     // &subject=FACE_TO_FACE_PAYMENT_PRECREATE中文
     // &trade_status=TRADE_SUCCESS
     // &sign_type=RSA2
-    @RequestMapping(value = "/alipay-paid-callback")
-    public Object alipayCallback(@RequestParam Map<String, String> paramsMap) {
+    @PostMapping(value = "/alipay-paid-callback")
+    public Object alipayCallback(@RequestBody Map<String, String> paramsMap) {
         try {
+            logger.debug(paramsMap.toString());
             String code = paramsMap.get("code");
             if ("9000".equals(code)) {
                 String sign = paramsMap.get("sign");
