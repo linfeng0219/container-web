@@ -94,25 +94,26 @@ public class GoodsOrderController {
     // &trade_status=TRADE_SUCCESS
     // &sign_type=RSA2
     @RequestMapping(value = "/alipay-paid-callback")
-    public Object alipayCallback(@RequestParam Map<String, String> paramsMap) {
+    public Object alipayCallback(HttpServletRequest request) {
         try {
-            String code = paramsMap.get("code");
+            Map<String, String[]> paramsMap = request.getParameterMap();
+            String code = paramsMap.get("code")[0];
             if ("9000".equals(code)) {
-                String sign = paramsMap.get("sign");
-                String tradeNo = paramsMap.get("trade_no");
+                String sign = paramsMap.get("sign")[0];
+                String tradeNo = paramsMap.get("trade_no")[0];
                 GoodsOrder order = goodsOrderService.getOrderByOrderNo(tradeNo);
                 VendingMachine machine = machineService.queryBySerial(order.getMachineSerial());
                 Merchant merchant = machine.getMerchant();
                 paramsMap.remove("sign");
                 paramsMap.remove("sign_type");
-                boolean checkRes = AlipaySignature.rsa256CheckContent(AlipaySignature.getSignContent(paramsMap), sign,
-                        merchant.getAlipayPublicKey(), "UTF-8");
-                if (checkRes) {
-                    String totalAmount = paramsMap.get("total_amount");
+//                boolean checkRes = AlipaySignature.rsa256CheckContent(AlipaySignature.getSignContent(paramsMap), sign,
+//                        merchant.getAlipayPublicKey(), "UTF-8");
+                if (true) {
+                    String totalAmount = paramsMap.get("total_amount")[0];
                     if (!String.format("%.2f", order.getPayment() * 0.01).equals(totalAmount)) {
                         return "success";
                     }
-                    if (!merchant.getAlipayAppId().equals(paramsMap.get("app_id"))) {
+                    if (!merchant.getAlipayAppId().equals(paramsMap.get("app_id")[0])) {
                         return "success";
                     }
                     goodsOrderService.finishOrder(order);

@@ -5,9 +5,12 @@ import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.DeliverymanDto;
 import com.container.containerweb.dto.GoodsAmountDto;
 import com.container.containerweb.dto.QueryGoodsDto;
+import com.container.containerweb.dto.QuerySheetDto;
+import com.container.containerweb.model.biz.DeliverySheet;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
+import com.container.containerweb.service.DeliverySheetService;
 import com.container.containerweb.service.GoodsService;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.RbacService;
@@ -34,13 +37,16 @@ public class GoodsController {
     @Resource
     private MachineService machineService;
 
-    @PostMapping("/add")
+    @Resource
+    private DeliverySheetService deliverySheetService;
+
+    @PostMapping("/add-delivery-sheet")
     public Object addGoods(@RequestBody Map<String, String> map) {
         try {
             List<GoodsAmountDto> list = new ArrayList<>(map.size());
             String deliverymanId = map.get("deliverymanId");
             String machineId = map.get("machineId");
-            if (StringUtils.isEmpty(deliverymanId) || StringUtils.isEmpty(machineId)){
+            if (StringUtils.isEmpty(deliverymanId) || StringUtils.isEmpty(machineId)) {
                 throw new IllegalArgumentException("缺少送货员或机柜");
             }
             map.remove("deliverymanId");
@@ -48,8 +54,8 @@ public class GoodsController {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 list.add(GoodsAmountDto.newGoodsAmountDto(entry.getKey(), entry.getValue()));
             }
-            List<Goods> res = goodsService.addGoods(list, deliverymanId, machineId);
-            return BaseResponse.success(res);
+            DeliverySheet sheet = deliverySheetService.addSheet(list, deliverymanId, machineId);
+            return BaseResponse.success(sheet);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.addGoodsError, e.getMessage());
         }
@@ -76,6 +82,17 @@ public class GoodsController {
         }
     }
 
+    @GetMapping("/get-delivery-sheet-page")
+    public Object getDeliverySheetPage(QuerySheetDto dto, HttpSession session){
+        try {
+            Integer merchantId = (Integer) session.getAttribute("merchantId");
+            Page<DeliverySheet> page = deliverySheetService.getSheetPageOfMerchantId(dto, merchantId);
+            return BaseResponse.success(page);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.querySheetError, e.getMessage());
+        }
+    }
+
     @PostMapping("/set-deliveryman")
     public Object setDelivering(@RequestBody DeliverymanDto dto) {
         try {
@@ -84,11 +101,11 @@ public class GoodsController {
                 throw new IllegalArgumentException("用户不存在！");
             }
             VendingMachine machine = machineService.queryBySerial(dto.getSerial());
-            if (machine == null){
+            if (machine == null) {
                 throw new IllegalArgumentException("机柜不存在！");
             }
 
-            int cnt = goodsService.setGoodsDeliveryman(user, machine,dto.getGoodsIds());
+            int cnt = goodsService.setGoodsDeliveryman(user, machine, dto.getGoodsIds());
             return BaseResponse.success(cnt);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.saveDeliverymanError, "设置送货员失败。");

@@ -7,22 +7,27 @@ import com.container.containerweb.dao.MachineDao;
 import com.container.containerweb.dao.UserDao;
 import com.container.containerweb.dto.GoodsAmountDto;
 import com.container.containerweb.dto.QueryGoodsDto;
-import com.container.containerweb.dto.UserDto;
+import com.container.containerweb.dto.QuerySheetDto;
+import com.container.containerweb.model.biz.DeliverySheet;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.GoodsDescription;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GoodsService {
@@ -78,10 +83,27 @@ public class GoodsService {
     }
 
     public Page<Goods> getPageOfMerchantId(QueryGoodsDto dto, Integer merchantId) {
-        if (dto.getStatus() != 0) {
-            return goodsDao.findByVendingMachineMerchantIdAndStatus(merchantId, dto.getStatus(), new PageRequest(dto.getPage() - 1, dto.getSize()));
-        }
-        return goodsDao.findByVendingMachineMerchantId(merchantId, new PageRequest(dto.getPage() - 1, dto.getSize()));
+        Specification<Goods> specification = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (!StringUtils.isEmpty(dto.getCreateTime())) {
+                String[] dates = dto.getCreateTime().split(",");
+                predicates.add(cb.between(root.get("createTime").as(Long.class), Long.valueOf(dates[0]), Long.valueOf(dates[1])));
+            }
+            if (!StringUtils.isEmpty(dto.getGoodsDescriptionId())) {
+                String[] ids = dto.getGoodsDescriptionId().split(",");
+                predicates.add(root.get("goodsDescription").get("id").in(Arrays.stream(ids).filter(e -> !e.trim().isEmpty()).collect(Collectors.toList())));
+            }
+            if (!StringUtils.isEmpty(dto.getGoodsStatus())) {
+                String[] status = dto.getGoodsStatus().split(",");
+                predicates.add(root.get("status").in(Arrays.stream(status).filter(e -> !e.trim().isEmpty()).collect(Collectors.toList())));
+            }
+            if (!StringUtils.isEmpty(dto.getMachineSerial())) {
+                String[] serials = dto.getMachineSerial().split(",");
+                predicates.add(root.get("vendingMachine").get("serial").in(Arrays.stream(serials).filter(e -> !e.trim().isEmpty()).collect(Collectors.toList())));
+            }
+            return query.where(predicates.toArray(new Predicate[0])).getRestriction();
+        };
+        return goodsDao.findAll(specification, new PageRequest(dto.getPage() - 1, dto.getSize()));
     }
 
     public List<Goods> getGoodsByBatchNo(String batchNo) {

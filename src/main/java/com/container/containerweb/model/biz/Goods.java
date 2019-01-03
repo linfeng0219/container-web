@@ -30,7 +30,6 @@ public class Goods {
     private String idx;
 
     @ManyToOne
-    @JsonIgnore
     private VendingMachine vendingMachine;
 
     @ManyToOne
