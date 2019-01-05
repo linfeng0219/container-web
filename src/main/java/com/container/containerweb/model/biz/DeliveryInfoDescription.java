@@ -10,11 +10,11 @@ public class DeliveryInfoDescription {
     @GeneratedValue
     private Integer id;
     
-    private String goodsDesc;
+    private String goodsDesc;//菜品
     
-    private Integer amount;
+    private Integer amount;//数量
 
-    private Integer sheetId;
+    private Integer sheetId;//配货单
 
     public Integer getId() {
         return id;

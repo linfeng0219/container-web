@@ -10,17 +10,17 @@ public class DeliverySheet {
     @GeneratedValue
     private Integer id;
 
-    private String batchNo;
+    private String batchNo;//批次号
 
-    private String deliveryman;
+    private String deliveryman;//配货员
 
-    private Integer machineCapacity;
+    private Integer machineCapacity;//机柜容量
 
-    private Integer total;
+    private Integer total;//配送数量
 
-    private String machineLocation;
+    private String machineLocation;//机柜地址
 
-    private Integer merchantId;
+    private Integer merchantId;//运营商
 
     @Transient
     private List<DeliveryInfoDescription> descriptions;

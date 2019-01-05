@@ -8,16 +8,13 @@ import com.container.containerweb.dao.MerchantDao;
 import com.container.containerweb.dao.UserDao;
 import com.container.containerweb.dto.GoodsIdxCode;
 import com.container.containerweb.dto.MachineGoodsBinding;
-import com.container.containerweb.dto.UserDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +42,7 @@ public class MachineService {
         VendingMachine machine = machineDao.findBySerial(binding.getSerial());
         goods.forEach(e -> {
             //e.setVendingMachine(machine);
-            e.setStatus(GoodsStatus.STORED.getCode());
+            e.setStatus(GoodsStatus.FORSALE.getCode());
             binding.getIdxCode().forEach(r -> {
                 if (Objects.equals(r.getCode(), e.getBarcode())) {
                     e.setIdx(r.getIndex());
@@ -83,9 +80,13 @@ public class MachineService {
 
     public VendingMachine updateStatus(VendingMachine machine) {
         VendingMachine one = machineDao.findBySerial(machine.getSerial());
+        List<Goods> goods = goodsDao.findByVendingMachineSerialAndStatus(machine.getSerial(),GoodsStatus.FORSALE.getCode());
         one.setStatus(machine.getStatus());
         one.setUpdateTime(System.currentTimeMillis());
         one.setTemperature(machine.getTemperature());
+        one.setHumidity(machine.getHumidity());
+        one.setErrorCode(machine.getErrorCode());
+        one.setGoods(goods);
         return machineDao.save(one);
     }
 

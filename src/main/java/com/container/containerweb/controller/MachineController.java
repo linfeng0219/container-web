@@ -4,6 +4,7 @@ import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
 import com.container.containerweb.model.biz.Goods;
+import com.container.containerweb.model.biz.GoodsDescription;
 import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
@@ -81,7 +82,14 @@ public class MachineController {
     public Object uploadStatus(@RequestBody VendingMachine machine) {
         try {
             VendingMachine m = machineService.updateStatus(machine);
-            List<Goods> goodsList = goodsService.getGoodsByMachine(m);
+            List<Goods> goodsList =m.getGoods();
+            for (Goods goods:goodsList){
+                GoodsDescription goodsDescription = goods.getGoodsDescription();
+                goodsDescription.setMerchant(null);
+                goods.setVendingMachine(null);
+                goods.setDeliveryman(null);
+                goods.setGoodsDescription(goodsDescription);
+            }
             m.setGoods(goodsList);
             m.setMerchant(null);
             m.setMaster(null);

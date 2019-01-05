@@ -10,14 +10,16 @@ public class GoodsDescription {
     @GeneratedValue
     private Integer id;
 
-    private String description;
+    private String description;//类型名字
 
-    private String imageHash;
+    private String imageHash;//图片地址
 
-    private Integer price;
+    private Integer price;//价格
+
+    private String barcode;//二维码
 
     @ManyToOne
-    private Merchant merchant;
+    private Merchant merchant;//商户
 
     public Integer getId() {
         return id;
@@ -57,5 +59,13 @@ public class GoodsDescription {
 
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 }

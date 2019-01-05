@@ -15,24 +15,30 @@ public class VendingMachine {
 
     private String serial;//序列号
 
-    private String location;
+    private String location;//位置
 
-    private Integer status;
+    private Integer status;//状态
 
-    private Long updateTime;
+    private Long updateTime;//更新时间
 
-    private Integer temperature;
+    private Integer temperature;//温度
 
-    private Integer humidity;
+    private Integer humidity;//湿度
 
-    private Long createTime;
+    private Long createTime;//创建时间
 
-    private Integer capacity;
+    private Integer capacity;//容量
 
-    private Long exp;
+    private Long exp;//
+
+    private Integer validTime;//有效时间
+
+    private Integer errorCode;//故障代码
+
+    private String name;//机柜名
 
     @ManyToOne
-    private Merchant merchant;
+    private Merchant merchant;//运营商
 
     @OneToOne
     private User master;//负责人
@@ -142,5 +148,29 @@ public class VendingMachine {
 
     public void setExp(Long exp) {
         this.exp = exp;
+    }
+
+    public Integer getValidTime() {
+        return validTime;
+    }
+
+    public void setValidTime(Integer validTime) {
+        this.validTime = validTime;
+    }
+
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

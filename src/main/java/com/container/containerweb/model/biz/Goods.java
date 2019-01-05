@@ -27,7 +27,9 @@ public class Goods {
     @ManyToOne
     private GoodsDescription goodsDescription;
 
-    private String idx;
+    private String idx;//列
+
+    private String idy;//层
 
     @ManyToOne
     private VendingMachine vendingMachine;
@@ -133,5 +135,13 @@ public class Goods {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public String getIdy() {
+        return idy;
+    }
+
+    public void setIdy(String idy) {
+        this.idy = idy;
     }
 }

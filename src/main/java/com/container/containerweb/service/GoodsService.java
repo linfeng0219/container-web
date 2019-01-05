@@ -119,7 +119,7 @@ public class GoodsService {
         List<Goods> _list = goodsDao.findAll(goods);
         for (Goods _g : _list) {
             _g.setDeliveryman(user);
-            _g.setStatus(GoodsStatus.DELIVERING.getCode());
+            _g.setStatus(GoodsStatus.PRODUCED.getCode());
             _g.setVendingMachine(machine);
         }
         return goodsDao.save(_list).size();
@@ -130,6 +130,6 @@ public class GoodsService {
     }
 
     public List<Goods> findCurrentBatchNoBySerial(String serial) {
-        return goodsDao.findByVendingMachineSerialAndStatus(serial, GoodsStatus.DELIVERING.getCode());
+        return goodsDao.findByVendingMachineSerialAndStatus(serial, GoodsStatus.PRODUCED.getCode());
     }
 }
