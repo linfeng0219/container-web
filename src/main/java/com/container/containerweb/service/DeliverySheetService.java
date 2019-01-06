@@ -1,5 +1,6 @@
 package com.container.containerweb.service;
 
+import com.container.containerweb.constants.DeliveryStatus;
 import com.container.containerweb.constants.GoodsStatus;
 import com.container.containerweb.dao.*;
 import com.container.containerweb.dto.GoodsAmountDto;
@@ -49,6 +50,10 @@ public class DeliverySheetService {
         if (machine == null) {
             throw new NullPointerException("机柜不存在");
         }
+        List<DeliverySheet> deliverySheetList = sheetDao.findByMerchantIdAndStatus(Integer.valueOf(machineId),DeliveryStatus.UNCOMPLETE.getCode());
+        if(deliverySheetList!=null){
+            throw new NullPointerException("当前有未完成配货单，请完成后继续");
+        }
         String batchNo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         //生成配货单
         DeliverySheet sheet = new DeliverySheet();
@@ -57,6 +62,7 @@ public class DeliverySheetService {
         sheet.setMachineCapacity(machine.getCapacity());
         sheet.setMachineLocation(machine.getLocation() + ":" + machine.getSerial());
         sheet.setMerchantId(machine.getMerchant().getId());
+        sheet.setStatus(DeliveryStatus.UNCOMPLETE.getCode());
         int total = 0;
         for (GoodsAmountDto dto : dtos) {
             total += dto.getAmount();

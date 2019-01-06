@@ -73,6 +73,7 @@ public class GoodsOrderController {
     public Object getOrder(String barcode) {
         try {
             GoodsOrder order = goodsOrderService.getOrderByOrderNo(barcode);
+            order.setGoods(null);
             return BaseResponse.success(order);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryOrderError, e.getMessage());

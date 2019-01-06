@@ -18,11 +18,11 @@ public class Goods {
 
     private int status;
 
-    private String barcode;
+    private String barcode;//二维码
 
     private String comment;
 
-    private String batchNo;
+    private String batchNo;//批次号
 
     @ManyToOne
     private GoodsDescription goodsDescription;

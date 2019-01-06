@@ -22,6 +22,8 @@ public class DeliverySheet {
 
     private Integer merchantId;//运营商
 
+    private Integer status;//状态
+
     @Transient
     private List<DeliveryInfoDescription> descriptions;
 
@@ -94,5 +96,13 @@ public class DeliverySheet {
 
     public void setMerchantId(Integer merchantId) {
         this.merchantId = merchantId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
