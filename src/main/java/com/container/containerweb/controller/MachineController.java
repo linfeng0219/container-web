@@ -27,6 +27,7 @@ public class MachineController {
     @Resource
     private GoodsService goodsService;
 
+
     @GetMapping("/list")
     public Object list(HttpSession session) {
         try {
@@ -103,6 +104,13 @@ public class MachineController {
     public Object getCurrentBatchNo(String serial) {
         try {
             List<Goods> goodsList = goodsService.findCurrentBatchNoBySerial(serial);
+            for (Goods goods:goodsList){
+                GoodsDescription goodsDescription = goods.getGoodsDescription();
+                goodsDescription.setMerchant(null);
+                goods.setVendingMachine(null);
+                goods.setDeliveryman(null);
+                goods.setGoodsDescription(goodsDescription);
+            }
             return BaseResponse.success(goodsList);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryMachineError, e.getMessage());
