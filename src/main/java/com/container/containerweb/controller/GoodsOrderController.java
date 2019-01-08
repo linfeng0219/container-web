@@ -103,7 +103,7 @@ public class GoodsOrderController {
     @RequestMapping(value = "/alipay-paid-callback")
     public Object alipayCallback(HttpServletRequest request) {
         try {
-            Map<String, List<String>> paramsMap = mapper.readValue("{\"gmt_create\":[\"2019-01-08 21:52:07\"],\"charset\":[\"utf-8\"],\"seller_email\":[\"275578830@qq.com\"],\"subject\":[\"香肠炒饭\"],\"sign\":[\"R/1r/31xkJtoSSVq5VKUShebXn1Puokb9yPL7jADtedCPowh+/9/Z0jG2W6I7MBLqjbByCpmH0+wP/Gvf/x6nh37AOKr1cZgAh+Kh9amx8xlbgwNVjL2Avvhbj3Lm2PBTg62zQoFNdLYRpiZBhowoxh0d0AvxZhEO7HLCkj8/0w3iQqxdOac2AS3mXO/hGpou+4oK50oDB4q+Dnum3p2/YvwC8OpeAO5GlA7jD6C3oXhlZqGCndmzucFHjL1l4aPqe7EkW6qcCqKXzxeyWyC3TetLISwCKxiVfE1bYS44yRpZhcmlMj+U8rOdnKlWZ97XSNzoM/LlDQ547jkQ6kyhA==\"],\"buyer_id\":[\"2088502687420956\"],\"invoice_amount\":[\"0.10\"],\"notify_id\":[\"2019010800222215217020950512114166\"],\"fund_bill_list\":[\"[{\\\"amount\\\":\\\"0.10\\\",\\\"fundChannel\\\":\\\"PCREDIT\\\"}]\"],\"notify_type\":[\"trade_status_sync\"],\"trade_status\":[\"TRADE_SUCCESS\"],\"receipt_amount\":[\"0.10\"],\"buyer_pay_amount\":[\"0.10\"],\"app_id\":[\"2018110862083336\"],\"sign_type\":[\"RSA2\"],\"seller_id\":[\"2088331208523421\"],\"gmt_payment\":[\"2019-01-08 21:52:17\"],\"notify_time\":[\"2019-01-08 22:16:50\"],\"version\":[\"1.0\"],\"out_trade_no\":[\"2019010821515911\"],\"total_amount\":[\"0.10\"],\"trade_no\":[\"2019010822001420950523201271\"],\"auth_app_id\":[\"2018110862083336\"],\"buyer_logon_id\":[\"460***@qq.com\"],\"point_amount\":[\"0.00\"]}", HashMap.class);
+            Map<String, String[]> paramsMap = request.getParameterMap();
             Map<String, String> sortedMap = convertToSortedMap(paramsMap);
             System.out.println("支付宝回调参数：" + mapper.writeValueAsString(paramsMap));
             String status = sortedMap.get("trade_status");
@@ -131,10 +131,10 @@ public class GoodsOrderController {
         return null;
     }
 
-    private Map<String, String> convertToSortedMap(Map<String, List<String>> paramsMap) {
+    private Map<String, String> convertToSortedMap(Map<String, String[]> paramsMap) {
         Map<String, String> map = new TreeMap<>();
-        for (Map.Entry<String, List<String>> entry : paramsMap.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().get(0));
+        for (Map.Entry<String, String[]> entry : paramsMap.entrySet()) {
+            map.put(entry.getKey(), entry.getValue()[0]);
         }
         return map;
     }
