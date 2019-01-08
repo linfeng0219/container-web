@@ -1,6 +1,5 @@
 package com.container.containerweb.controller;
 
-import com.alipay.api.internal.util.AlipaySignature;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.QueryOrderDto;
@@ -12,6 +11,7 @@ import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.service.GoodsOrderService;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.PaymentService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +34,9 @@ public class GoodsOrderController {
     @Resource
     private MachineService machineService;
 
+    @Resource
+    private ObjectMapper mapper;
+
     @GetMapping("/page")
     public Object orderPage(QueryOrderDto dto, HttpSession session) {
         try {
@@ -54,15 +57,15 @@ public class GoodsOrderController {
         try {
             GoodsOrder mGoodsOrder = goodsOrderService.addOrder(goodsOrder);
             String codeUrl;
-            Map<String,Object> rtnMap = new HashMap<String, Object>();
-            rtnMap.put("order",mGoodsOrder);
+            Map<String, Object> rtnMap = new HashMap<String, Object>();
+            rtnMap.put("order", mGoodsOrder);
             //wx
             if (goodsOrder.getPaymentMode() == 0) {
                 codeUrl = paymentService.wxPay(goodsOrder, request.getRemoteHost());
             } else {
                 codeUrl = paymentService.aliPay(goodsOrder);
             }
-            rtnMap.put("codeUrl",codeUrl);
+            rtnMap.put("codeUrl", codeUrl);
             return BaseResponse.success(rtnMap);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.createOrderError, e.getMessage());
@@ -98,6 +101,7 @@ public class GoodsOrderController {
     public Object alipayCallback(HttpServletRequest request) {
         try {
             Map<String, String[]> paramsMap = request.getParameterMap();
+            System.out.println("支付宝回调参数：" + mapper.writeValueAsString(paramsMap));
             String code = paramsMap.get("code")[0];
             if ("9000".equals(code)) {
                 String sign = paramsMap.get("sign")[0];
