@@ -65,11 +65,11 @@ public class PaymentService {
         AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", appId, appPrivateKey, "json", "utf-8", appPublicKey, "RSA2");  //获得初始化的AlipayClient
 //创建API对应的request类
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
+        request.setNotifyUrl("http://218.93.6.98:6189/order/alipay-paid-callback");
         Map<String, String> bizContent = new HashMap<>();
         bizContent.put("subject", order.getGoods().getGoodsDescription().getDescription());
         bizContent.put("out_trade_no", order.getOrderNo());
         bizContent.put("total_amount", String.format("%.2f", order.getPayment() * 0.01));
-        bizContent.put("notify_url","http://218.93.6.98:6189/order/alipay-paid-callback");
         request.setBizContent(objectMapper.writeValueAsString(bizContent));
 //通过alipayClient调用API，获得对应的response类
         AlipayTradePrecreateResponse response = alipayClient.execute(request);
