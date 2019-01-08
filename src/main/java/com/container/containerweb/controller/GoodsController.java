@@ -55,6 +55,8 @@ public class GoodsController {
                 list.add(GoodsAmountDto.newGoodsAmountDto(entry.getKey(), entry.getValue()));
             }
             DeliverySheet sheet = deliverySheetService.addSheet(list, deliverymanId, machineId);
+
+            goodsService.addGoodsCollectRecord(list, sheet.getBatchNo(), machineId);
             return BaseResponse.success(sheet);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.addGoodsError, e.getMessage());

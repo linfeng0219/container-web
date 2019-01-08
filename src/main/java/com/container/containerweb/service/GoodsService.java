@@ -1,17 +1,11 @@
 package com.container.containerweb.service;
 
 import com.container.containerweb.constants.GoodsStatus;
-import com.container.containerweb.dao.GoodsDao;
-import com.container.containerweb.dao.GoodsDescDao;
-import com.container.containerweb.dao.MachineDao;
-import com.container.containerweb.dao.UserDao;
+import com.container.containerweb.dao.*;
 import com.container.containerweb.dto.GoodsAmountDto;
 import com.container.containerweb.dto.QueryGoodsDto;
 import com.container.containerweb.dto.QuerySheetDto;
-import com.container.containerweb.model.biz.DeliverySheet;
-import com.container.containerweb.model.biz.Goods;
-import com.container.containerweb.model.biz.GoodsDescription;
-import com.container.containerweb.model.biz.VendingMachine;
+import com.container.containerweb.model.biz.*;
 import com.container.containerweb.model.rbac.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -43,6 +37,9 @@ public class GoodsService {
 
     @Resource
     private MachineDao machineDao;
+
+    @Resource
+    private GoodsCollectDao goodsCollectDao;
 
     @Value("${web.upload.img}")
     private String imgPath;
@@ -131,5 +128,21 @@ public class GoodsService {
 
     public List<Goods> findCurrentBatchNoBySerial(String serial) {
         return goodsDao.findByVendingMachineSerialAndStatus(serial, GoodsStatus.PRODUCED.getCode());
+    }
+
+    public void addGoodsCollectRecord(List<GoodsAmountDto> list, String batchNo, String machineId) {
+        VendingMachine machine = machineDao.findOne(Integer.valueOf(machineId));
+        List<GoodsCollect> batch = new ArrayList<>();
+        for (GoodsAmountDto dto : list) {
+            GoodsDescription goodsDesc = goodsDescDao.findOne(dto.getId());
+            GoodsCollect collect = new GoodsCollect();
+            collect.setGoodsDesc(goodsDesc.getDescription());
+            collect.setPrice(goodsDesc.getPrice());
+            collect.setDeliverBatchNo(batchNo);
+            collect.setMachineLocation(machine.getLocation());
+            collect.setMachineSerial(machine.getSerial());
+            batch.add(collect);
+        }
+        goodsCollectDao.save(batch);
     }
 }

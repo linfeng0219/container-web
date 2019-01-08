@@ -51,7 +51,7 @@ public class DeliverySheetService {
             throw new NullPointerException("机柜不存在");
         }
         List<DeliverySheet> deliverySheetList = sheetDao.findByMerchantIdAndStatus(Integer.valueOf(machineId),DeliveryStatus.UNCOMPLETE.getCode());
-        if(deliverySheetList!=null){
+        if(!deliverySheetList.isEmpty()){
             throw new NullPointerException("当前有未完成配货单，请完成后继续");
         }
         String batchNo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
