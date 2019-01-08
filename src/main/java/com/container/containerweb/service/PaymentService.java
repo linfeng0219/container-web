@@ -69,6 +69,7 @@ public class PaymentService {
         bizContent.put("subject", order.getGoods().getGoodsDescription().getDescription());
         bizContent.put("out_trade_no", order.getOrderNo());
         bizContent.put("total_amount", String.format("%.2f", order.getPayment() * 0.01));
+        bizContent.put("notify_url","http://218.93.6.98:6189/order/alipay-paid-callback");
         request.setBizContent(objectMapper.writeValueAsString(bizContent));
 //通过alipayClient调用API，获得对应的response类
         AlipayTradePrecreateResponse response = alipayClient.execute(request);
