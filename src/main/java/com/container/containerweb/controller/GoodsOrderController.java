@@ -1,5 +1,6 @@
 package com.container.containerweb.controller;
 
+import com.alipay.api.internal.util.AlipaySignature;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.QueryOrderDto;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/order")
@@ -101,24 +103,23 @@ public class GoodsOrderController {
     public Object alipayCallback(HttpServletRequest request) {
         try {
             Map<String, String[]> paramsMap = request.getParameterMap();
+            Map<String, String> sortedMap = convertToSortedMap(paramsMap);
             System.out.println("支付宝回调参数：" + mapper.writeValueAsString(paramsMap));
-            String code = paramsMap.get("code")[0];
-            if ("9000".equals(code)) {
-                String sign = paramsMap.get("sign")[0];
-                String tradeNo = paramsMap.get("trade_no")[0];
+            String status = sortedMap.get("trade_status");
+            if ("TRADE_SUCCESS".equals(status)) {
+                String sign = sortedMap.get("sign");
+                String tradeNo = sortedMap.get("trade_no");
                 GoodsOrder order = goodsOrderService.getOrderByOrderNo(tradeNo);
                 VendingMachine machine = machineService.queryBySerial(order.getMachineSerial());
                 Merchant merchant = machine.getMerchant();
                 paramsMap.remove("sign");
                 paramsMap.remove("sign_type");
-//                boolean checkRes = AlipaySignature.rsa256CheckContent(AlipaySignature.getSignContent(paramsMap), sign,
-//                        merchant.getAlipayPublicKey(), "UTF-8");
-                if (true) {
-                    String totalAmount = paramsMap.get("total_amount")[0];
-                    if (!String.format("%.2f", order.getPayment() * 0.01).equals(totalAmount)) {
-                        return "success";
-                    }
-                    if (!merchant.getAlipayAppId().equals(paramsMap.get("app_id")[0])) {
+                boolean checkRes = AlipaySignature.rsa256CheckContent(AlipaySignature.getSignContent(sortedMap), sign,
+                        merchant.getAlipayPublicKey(), "UTF-8");
+                if (checkRes) {
+                    String totalAmount = sortedMap.get("total_amount");
+                    if (String.format("%.2f", order.getPayment() * 0.01).equals(totalAmount)
+                            && merchant.getAlipayAppId().equals(sortedMap.get("app_id"))) {
                         return "success";
                     }
                     goodsOrderService.finishOrder(order);
@@ -126,8 +127,17 @@ public class GoodsOrderController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
+    }
+
+    private Map<String, String> convertToSortedMap(Map<String, String[]> paramsMap) {
+        Map<String, String> map = new TreeMap<>();
+        for (Map.Entry<String, String[]> entry : paramsMap.entrySet()) {
+            map.put(entry.getKey(), entry.getValue()[0]);
+        }
+        return map;
     }
 
     @RequestMapping(value = "/wx-paid-callback", consumes = {"application/xml"})
