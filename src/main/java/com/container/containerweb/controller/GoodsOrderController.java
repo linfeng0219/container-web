@@ -113,8 +113,8 @@ public class GoodsOrderController {
                 GoodsOrder order = goodsOrderService.getOrderByOrderNo(tradeNo);
                 VendingMachine machine = machineService.queryBySerial(order.getMachineSerial());
                 Merchant merchant = machine.getMerchant();
-                paramsMap.remove("sign");
-                paramsMap.remove("sign_type");
+                sortedMap.remove("sign");
+                sortedMap.remove("sign_type");
                 boolean checkRes = AlipaySignature.rsa256CheckContent(AlipaySignature.getSignContent(sortedMap), sign,
                         merchant.getAlipayPublicKey(), "UTF-8");
                 String totalAmount = sortedMap.get("total_amount");

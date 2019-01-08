@@ -2,18 +2,14 @@ package com.container.containerweb.controller;
 
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
-import com.container.containerweb.dto.DeliverymanDto;
-import com.container.containerweb.dto.GoodsAmountDto;
-import com.container.containerweb.dto.QueryGoodsDto;
-import com.container.containerweb.dto.QuerySheetDto;
+import com.container.containerweb.dto.*;
 import com.container.containerweb.model.biz.DeliverySheet;
 import com.container.containerweb.model.biz.Goods;
+import com.container.containerweb.model.biz.GoodsCollect;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
-import com.container.containerweb.service.DeliverySheetService;
-import com.container.containerweb.service.GoodsService;
-import com.container.containerweb.service.MachineService;
-import com.container.containerweb.service.RbacService;
+import com.container.containerweb.service.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +35,9 @@ public class GoodsController {
 
     @Resource
     private DeliverySheetService deliverySheetService;
+
+    @Resource
+    private GoodsCollectService collectService;
 
     @PostMapping("/add-delivery-sheet")
     public Object addGoods(@RequestBody Map<String, String> map) {
@@ -92,6 +91,17 @@ public class GoodsController {
             return BaseResponse.success(page);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.querySheetError, e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-goods-collect-page")
+    public Object getGoodsCollectPage(QueryGoodsCollectDto dto, HttpSession session){
+        try {
+            Integer merchantId = (Integer) session.getAttribute("merchantId");
+            Page<GoodsCollect> page = collectService.getPage(dto, merchantId);
+            return BaseResponse.success(page);
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.queryGoodsCollectError, e.getMessage());
         }
     }
 
