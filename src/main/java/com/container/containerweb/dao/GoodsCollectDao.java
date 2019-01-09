@@ -15,4 +15,8 @@ public interface GoodsCollectDao extends JpaRepository<GoodsCollect, Integer>, J
     @Modifying
     @Query("update GoodsCollect set allTotalAmount = sum(singleTotalAmount) where deliverBatchNo = ?1")
     void updateTotalAmount(String batchNo);
+
+    @Modifying
+    @Query("update GoodsCollect set actualDeliverAmount = actualDeliverAmount + 1 where deliverBatchNo = ?1 and goodsDesc = ?2")
+    void updateActualDeliverAmount(String batchNo, String description);
 }

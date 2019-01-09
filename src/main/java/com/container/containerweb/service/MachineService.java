@@ -2,10 +2,7 @@ package com.container.containerweb.service;
 
 import com.container.containerweb.constants.GoodsStatus;
 import com.container.containerweb.constants.MachineStatus;
-import com.container.containerweb.dao.GoodsDao;
-import com.container.containerweb.dao.MachineDao;
-import com.container.containerweb.dao.MerchantDao;
-import com.container.containerweb.dao.UserDao;
+import com.container.containerweb.dao.*;
 import com.container.containerweb.dto.GoodsIdxCode;
 import com.container.containerweb.dto.MachineGoodsBinding;
 import com.container.containerweb.model.biz.Goods;
@@ -33,6 +30,9 @@ public class MachineService {
     @Resource
     private UserDao userDao;
 
+    @Resource
+    private GoodsCollectDao collectDao;
+
     public List<VendingMachine> getMachineListOfMerchant(Integer merchantId) {
         return machineDao.findByMerchantId(merchantId);
     }
@@ -41,7 +41,7 @@ public class MachineService {
         List<Goods> goods = goodsDao.findByBarcodeIn(binding.getCodes());
         VendingMachine machine = machineDao.findBySerial(binding.getSerial());
         goods.forEach(e -> {
-            //e.setVendingMachine(machine);
+            e.setVendingMachine(machine);
             e.setStatus(GoodsStatus.FORSALE.getCode());
             binding.getIdxCode().forEach(r -> {
                 if (Objects.equals(r.getCode(), e.getBarcode())) {
@@ -49,6 +49,8 @@ public class MachineService {
                 }
             });
             goodsDao.save(e);
+
+            collectDao.updateActualDeliverAmount(e.getBatchNo(), e.getGoodsDescription().getDescription());
         });
     }
 
