@@ -1,5 +1,7 @@
 package com.container.containerweb.model.biz;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,22 +18,29 @@ public class GoodsCollect {
 
     private String goodsDesc;
 
+    @ColumnDefault("0")
     private Integer price;
 
+    @ColumnDefault("0")
     private Integer prepareDeliverAmount;
 
+    @ColumnDefault("0")
     private Integer actualDeliverAmount;
 
+    @ColumnDefault("0")
     private Integer soldAmount;
 
+    @ColumnDefault("0")
     private Integer singleTotalAmount;
 
     private String machineSerial;
 
     private String machineLocation;
 
+    @ColumnDefault("0")
     private Integer shouldRecycleAmount;
 
+    @ColumnDefault("0")
     private Integer allTotalAmount;
 
     private String deliverBatchNo;

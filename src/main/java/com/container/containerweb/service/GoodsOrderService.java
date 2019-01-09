@@ -2,14 +2,10 @@ package com.container.containerweb.service;
 
 import com.container.containerweb.constants.GoodsStatus;
 import com.container.containerweb.constants.OrderStatus;
-import com.container.containerweb.dao.GoodsDao;
-import com.container.containerweb.dao.GoodsOrderDao;
-import com.container.containerweb.dao.MachineDao;
-import com.container.containerweb.dao.MerchantDao;
+import com.container.containerweb.dao.*;
 import com.container.containerweb.dto.QueryOrderDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.GoodsOrder;
-import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,6 +39,9 @@ public class GoodsOrderService {
 
     @Resource
     private EntityManager entityManager;
+
+    @Resource
+    private GoodsCollectDao collectDao;
 
     public List<GoodsOrder> getList() {
         return goodsOrderDao.findAll();
@@ -111,12 +111,16 @@ public class GoodsOrderService {
         return goodsOrderDao.findByOrderNo(tradeNo);
     }
 
+    @Transactional
     public void finishOrder(GoodsOrder order) {
         Goods goods = order.getGoods();
         goods.setStatus(GoodsStatus.SOLD.getCode());
         goodsDao.save(goods);
         order.setPaymentTime(System.currentTimeMillis());
         order.setStatus(OrderStatus.PAID.getCode());
+
+        collectDao.updateSoldGoodsAmount(goods.getBatchNo(), goods.getGoodsDescription().getDescription());
+        collectDao.updateTotalAmount(goods.getBatchNo());
         goodsOrderDao.save(order);
     }
 

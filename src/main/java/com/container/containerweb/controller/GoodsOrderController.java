@@ -13,6 +13,8 @@ import com.container.containerweb.service.GoodsOrderService;
 import com.container.containerweb.service.MachineService;
 import com.container.containerweb.service.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +22,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/order")
 public class GoodsOrderController {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private GoodsOrderService goodsOrderService;
@@ -105,7 +108,7 @@ public class GoodsOrderController {
         try {
             Map<String, String[]> paramsMap = request.getParameterMap();
             Map<String, String> sortedMap = convertToSortedMap(paramsMap);
-            System.out.println("支付宝回调参数：" + mapper.writeValueAsString(paramsMap));
+            logger.debug("支付宝回调参数：" + mapper.writeValueAsString(paramsMap));
             String status = sortedMap.get("trade_status");
             if ("TRADE_SUCCESS".equals(status)) {
                 String sign = sortedMap.get("sign");
@@ -126,7 +129,7 @@ public class GoodsOrderController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("支付宝回调异常：{}", e);
         }
         return null;
     }
