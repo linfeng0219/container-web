@@ -133,6 +133,7 @@ public class GoodsService {
     public void addGoodsCollectRecord(List<GoodsAmountDto> list, String batchNo, String machineId) {
         VendingMachine machine = machineDao.findOne(Integer.valueOf(machineId));
         List<GoodsCollect> batch = new ArrayList<>();
+        Long now = System.currentTimeMillis();
         for (GoodsAmountDto dto : list) {
             GoodsDescription goodsDesc = goodsDescDao.findOne(dto.getId());
             GoodsCollect collect = new GoodsCollect();
@@ -141,6 +142,7 @@ public class GoodsService {
             collect.setDeliverBatchNo(batchNo);
             collect.setMachineLocation(machine.getLocation());
             collect.setMachineSerial(machine.getSerial());
+            collect.setCreateTime(now);
             batch.add(collect);
         }
         goodsCollectDao.save(batch);
