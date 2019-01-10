@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface GoodsCollectDao extends JpaRepository<GoodsCollect, Integer>, JpaSpecificationExecutor<GoodsCollect> {
 
     @Modifying
@@ -13,10 +15,12 @@ public interface GoodsCollectDao extends JpaRepository<GoodsCollect, Integer>, J
     void updateSoldGoodsAmount(String batchNo, String description);
 
     @Modifying
-    @Query("update GoodsCollect set allTotalAmount = sum(singleTotalAmount) where deliverBatchNo = ?1")
-    void updateTotalAmount(String batchNo);
+    @Query("update GoodsCollect set allTotalAmount = ?1 where deliverBatchNo = ?2")
+    void updateTotalAmount(Integer sum, String batchNo);
 
     @Modifying
     @Query("update GoodsCollect set actualDeliverAmount = actualDeliverAmount + 1 where deliverBatchNo = ?1 and goodsDesc = ?2")
     void updateActualDeliverAmount(String batchNo, String description);
+
+    List<GoodsCollect> findByDeliverBatchNo(String batchNo);
 }

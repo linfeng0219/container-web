@@ -5,6 +5,7 @@ import com.container.containerweb.constants.OrderStatus;
 import com.container.containerweb.dao.*;
 import com.container.containerweb.dto.QueryOrderDto;
 import com.container.containerweb.model.biz.Goods;
+import com.container.containerweb.model.biz.GoodsCollect;
 import com.container.containerweb.model.biz.GoodsOrder;
 import com.container.containerweb.model.biz.VendingMachine;
 import org.springframework.data.domain.Page;
@@ -120,7 +121,14 @@ public class GoodsOrderService {
         order.setStatus(OrderStatus.PAID.getCode());
 
         collectDao.updateSoldGoodsAmount(goods.getBatchNo(), goods.getGoodsDescription().getDescription());
-        collectDao.updateTotalAmount(goods.getBatchNo());
+
+        List<GoodsCollect> collects = collectDao.findByDeliverBatchNo(goods.getBatchNo());
+        int sum = 0;
+        for (GoodsCollect collect : collects) {
+            sum += collect.getSingleTotalAmount();
+        }
+        collectDao.updateTotalAmount(sum, goods.getBatchNo());
+
         goodsOrderDao.save(order);
     }
 
