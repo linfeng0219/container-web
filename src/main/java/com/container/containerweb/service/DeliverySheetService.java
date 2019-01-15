@@ -50,7 +50,7 @@ public class DeliverySheetService {
         if (machine == null) {
             throw new NullPointerException("机柜不存在");
         }
-        List<DeliverySheet> deliverySheetList = sheetDao.findByMerchantIdAndStatus(Integer.valueOf(machineId),DeliveryStatus.UNCOMPLETE.getCode());
+        List<DeliverySheet> deliverySheetList = sheetDao.findByMerchantIdAndStatus(Integer.valueOf(machineId),DeliveryStatus.FORSTORE.getCode());
         if(!deliverySheetList.isEmpty()){
             throw new NullPointerException("当前有未完成配货单，请完成后继续");
         }
@@ -62,7 +62,7 @@ public class DeliverySheetService {
         sheet.setMachineCapacity(machine.getCapacity());
         sheet.setMachineLocation(machine.getLocation() + ":" + machine.getSerial());
         sheet.setMerchantId(machine.getMerchant().getId());
-        sheet.setStatus(DeliveryStatus.UNCOMPLETE.getCode());
+        sheet.setStatus(DeliveryStatus.FORSTORE.getCode());
         int total = 0;
         for (GoodsAmountDto dto : dtos) {
             total += dto.getAmount();
