@@ -143,6 +143,11 @@ public class GoodsService {
             collect.setMachineLocation(machine.getLocation());
             collect.setMachineSerial(machine.getSerial());
             collect.setCreateTime(now);
+            collect.setPrepareDeliverAmount(dto.getAmount());
+            collect.setActualDeliverAmount(0);
+            collect.setSingleTotalAmount(0);
+            collect.setSoldAmount(0);
+            collect.setShouldRecycleAmount(0);
             batch.add(collect);
         }
         goodsCollectDao.save(batch);
