@@ -59,6 +59,7 @@ public class MachineController {
         }
     }
 
+    //上架
     @PostMapping("/store-goods")
     public Object storeGoods(@RequestBody MachineGoodsBinding binding) {
         try {
@@ -69,6 +70,7 @@ public class MachineController {
         }
     }
 
+    //下架
     @PostMapping("/remove-goods")
     public Object removeGoods(@RequestBody MachineGoodsBinding binding) {
         try {

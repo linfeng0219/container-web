@@ -1,10 +1,12 @@
 package com.container.containerweb.service;
 
+import com.container.containerweb.constants.DeliveryStatus;
 import com.container.containerweb.constants.GoodsStatus;
 import com.container.containerweb.constants.MachineStatus;
 import com.container.containerweb.dao.*;
 import com.container.containerweb.dto.GoodsIdxCode;
 import com.container.containerweb.dto.MachineGoodsBinding;
+import com.container.containerweb.model.biz.DeliverySheet;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.Merchant;
 import com.container.containerweb.model.biz.VendingMachine;
@@ -33,36 +35,50 @@ public class MachineService {
     @Resource
     private GoodsCollectDao collectDao;
 
+    @Resource
+    private DeliverySheetDao deliverySheetDao;
+
     public List<VendingMachine> getMachineListOfMerchant(Integer merchantId) {
         return machineDao.findByMerchantId(merchantId);
     }
 
+    //上架
     public void storeGoods(MachineGoodsBinding binding) {
-        List<Goods> goods = goodsDao.findByBarcodeIn(binding.getCodes());
-        VendingMachine machine = machineDao.findBySerial(binding.getSerial());
-        goods.forEach(e -> {
-            e.setVendingMachine(machine);
-            e.setStatus(GoodsStatus.FORSALE.getCode());
-            binding.getIdxCode().forEach(r -> {
-                if (Objects.equals(r.getCode(), e.getBarcode())) {
-                    e.setIdx(r.getIndex());
+        List<Goods> goodsList = binding.getGoodsList();
+        for (Goods goods:goodsList){
+            Goods e = goodsDao.findOne(goods.getId());
+            if (e != null) {
+                e.setIdx(goods.getIdx());
+                e.setIdy(goods.getIdy());
+                e.setStatus(goods.getStatus());
+                goodsDao.save(e);
+                collectDao.updateActualDeliverAmount(e.getBatchNo(), e.getGoodsDescription().getDescription());
+                DeliverySheet ds = deliverySheetDao.findFirstByBatchNo(e.getBatchNo());
+                if(ds!=null){
+                    ds.setStatus(DeliveryStatus.FORSALR.getCode());
+                    deliverySheetDao.save(ds);
                 }
-            });
-            goodsDao.save(e);
-
-            collectDao.updateActualDeliverAmount(e.getBatchNo(), e.getGoodsDescription().getDescription());
-        });
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
     }
-
+    //销毁
     public void removeGoods(MachineGoodsBinding binding) {
-        GoodsIdxCode idxCode = binding.getIdxCode().get(0);
-        Goods goods = goodsDao.findByBarcodeAndIdx(idxCode.getCode(), idxCode.getIndex());
-        if (goods != null) {
-            //goods.setVendingMachine(null);
-            goods.setStatus(GoodsStatus.SOLD.getCode());
-            goodsDao.save(goods);
-        } else {
-            throw new IllegalArgumentException();
+        List<Goods> goodsList = binding.getGoodsList();
+        for (Goods goods:goodsList){
+            Goods e = goodsDao.findOne(goods.getId());
+            if (e != null) {
+                e.setStatus(GoodsStatus.OUT.getCode());
+                goodsDao.save(e);
+                DeliverySheet ds = deliverySheetDao.findFirstByBatchNo(e.getBatchNo());
+                if(ds!=null){
+                    ds.setStatus(DeliveryStatus.COMPLETE.getCode());
+                    deliverySheetDao.save(ds);
+                }
+            } else {
+                throw new IllegalArgumentException();
+            }
         }
     }
 

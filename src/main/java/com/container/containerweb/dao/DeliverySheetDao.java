@@ -10,4 +10,5 @@ import java.util.List;
 public interface DeliverySheetDao extends JpaRepository<DeliverySheet, Long> {
     Page<DeliverySheet> findByMerchantId(Integer merchantId, PageRequest pageRequest);
     List<DeliverySheet> findByMerchantIdAndStatus(Integer merchantId,Integer status);
+    DeliverySheet findFirstByBatchNo(String batchNo);
 }

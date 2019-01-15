@@ -1,8 +1,10 @@
 package com.container.containerweb.constants;
 
 public enum DeliveryStatus {
-    //未完成
-    UNCOMPLETE(1000),
+    //待上架
+    FORSTORE(1000),
+    //在售
+    FORSALR(5000),
     //已完成
     COMPLETE(2000);
 
