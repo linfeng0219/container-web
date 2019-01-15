@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
@@ -27,16 +28,16 @@ public class GoodsCollectService {
     private Specification<GoodsCollect> specificationOfQueryOrderDto(QueryGoodsCollectDto dto) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (dto.getMachineSerial() != null) {
+            if (!StringUtils.isEmpty(dto.getMachineSerial())) {
                 predicates.add(cb.equal(root.get("machineSerial").as(String.class), dto.getMachineSerial()));
             }
-            if (dto.getDeliverBatchNo() != null) {
+            if (!StringUtils.isEmpty(dto.getDeliverBatchNo())) {
                 predicates.add(cb.equal(root.get("deliverBatchNo").as(String.class), dto.getDeliverBatchNo()));
             }
-            if (dto.getGoodsDesc() != null) {
+            if (!StringUtils.isEmpty(dto.getGoodsDesc())) {
                 predicates.add(cb.equal(root.get("goodsDesc").as(String.class), dto.getGoodsDesc()));
             }
-            if (dto.getFrom() != null && dto.getTo() != null) {
+            if (!StringUtils.isEmpty(dto.getFrom()) && !StringUtils.isEmpty(dto.getTo())) {
                 predicates.add(cb.between(root.get("createTime"), dto.getFrom(), dto.getTo()));
             }
             return query.where(predicates.toArray(new Predicate[0])).getRestriction();
