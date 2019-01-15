@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -94,14 +95,14 @@ public class GoodsOrderService {
     private Specification<GoodsOrder> specificationOfQueryOrderDto(QueryOrderDto dto) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (dto.getMachineSerial() != null) {
+            if (!StringUtils.isEmpty(dto.getMachineSerial())) {
                 predicates.add(cb.equal(root.get("machineSerial").as(String.class), dto.getMachineSerial()));
-            } else if (dto.getMerchantId() != null) {
+            } else if (!StringUtils.isEmpty(dto.getMerchantId())) {
                 List<VendingMachine> machines = machineDao.findByMerchantId(dto.getMerchantId());
                 List<String> serials = machines.stream().map(VendingMachine::getSerial).collect(Collectors.toList());
                 predicates.add(root.get("machineSerial").in(serials));
             }
-            if (dto.getFrom() != null && dto.getTo() != null) {
+            if (StringUtils.isEmpty(dto.getFrom()) && StringUtils.isEmpty(dto.getTo())) {
                 predicates.add(cb.between(root.get("paymentTime"), dto.getFrom(), dto.getTo()));
             }
             return query.where(predicates.toArray(new Predicate[0])).getRestriction();
