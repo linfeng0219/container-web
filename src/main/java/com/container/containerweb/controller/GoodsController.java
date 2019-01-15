@@ -9,7 +9,6 @@ import com.container.containerweb.model.biz.GoodsCollect;
 import com.container.containerweb.model.biz.VendingMachine;
 import com.container.containerweb.model.rbac.User;
 import com.container.containerweb.service.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -84,7 +83,7 @@ public class GoodsController {
     }
 
     @GetMapping("/get-delivery-sheet-page")
-    public Object getDeliverySheetPage(QuerySheetDto dto, HttpSession session){
+    public Object getDeliverySheetPage(QuerySheetDto dto, HttpSession session) {
         try {
             Integer merchantId = (Integer) session.getAttribute("merchantId");
             Page<DeliverySheet> page = deliverySheetService.getSheetPageOfMerchantId(dto, merchantId);
@@ -95,7 +94,7 @@ public class GoodsController {
     }
 
     @GetMapping("/get-goods-collect-page")
-    public Object getGoodsCollectPage(QueryGoodsCollectDto dto, HttpSession session){
+    public Object getGoodsCollectPage(QueryGoodsCollectDto dto, HttpSession session) {
         try {
             Integer merchantId = (Integer) session.getAttribute("merchantId");
             Page<GoodsCollect> page = collectService.getPage(dto, merchantId);
@@ -121,6 +120,16 @@ public class GoodsController {
             return BaseResponse.success(cnt);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.saveDeliverymanError, "设置送货员失败。");
+        }
+    }
+
+    @PostMapping("/save-deliver-sheet")
+    public Object saveDeliverSheet(@RequestBody DeliverySheet sheet) {
+        try {
+            deliverySheetService.save(sheet);
+            return BaseResponse.success();
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.saveDeliverymanError, e.getMessage());
         }
     }
 }

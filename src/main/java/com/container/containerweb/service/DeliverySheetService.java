@@ -107,4 +107,10 @@ public class DeliverySheetService {
 
         return page;
     }
+
+    public void save(DeliverySheet sheet) {
+        if (sheet.getId() != null){
+            sheetDao.save(sheet);
+        }
+    }
 }
