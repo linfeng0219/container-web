@@ -20,6 +20,8 @@ public class DeliverySheet {
 
     private String machineLocation;//机柜地址
 
+    private String machineSerial;//机柜号
+
     private Integer merchantId;//运营商
 
     private Integer status;//状态
@@ -104,5 +106,13 @@ public class DeliverySheet {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getMachineSerial() {
+        return machineSerial;
+    }
+
+    public void setMachineSerial(String machineSerial) {
+        this.machineSerial = machineSerial;
     }
 }
