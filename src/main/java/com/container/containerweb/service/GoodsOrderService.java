@@ -102,8 +102,11 @@ public class GoodsOrderService {
                 List<String> serials = machines.stream().map(VendingMachine::getSerial).collect(Collectors.toList());
                 predicates.add(root.get("machineSerial").in(serials));
             }
-            if (StringUtils.isEmpty(dto.getFrom()) && StringUtils.isEmpty(dto.getTo())) {
-                predicates.add(cb.between(root.get("paymentTime"), dto.getFrom(), dto.getTo()));
+            if (!StringUtils.isEmpty(dto.getFrom())) {
+                predicates.add(cb.ge(root.get("paymentTime"), dto.getFrom()));
+            }
+            if (!StringUtils.isEmpty(dto.getTo())) {
+                predicates.add(cb.le(root.get("paymentTime"), dto.getTo()));
             }
             return query.where(predicates.toArray(new Predicate[0])).getRestriction();
         };
