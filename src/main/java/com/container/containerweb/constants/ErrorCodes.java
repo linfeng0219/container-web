@@ -29,4 +29,6 @@ public final class ErrorCodes {
     public static int deleteMerchantError = 1025;
     public static int querySheetError = 1026;
     public static int queryGoodsCollectError = 1027;
+    public static int deleteMachineError = 1028;
+    public static int deleteGoodsDesc = 1029;
 }

@@ -2,6 +2,7 @@ package com.container.containerweb.service;
 
 import com.container.containerweb.dao.GoodsDescDao;
 import com.container.containerweb.model.biz.GoodsDescription;
+import com.container.containerweb.model.biz.Merchant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -27,15 +28,36 @@ public class GoodsDescService {
         return goodsDescDao.findAll();
     }
 
-    public void addGoodsDesc(MultipartFile file, String desc, String price) throws IOException {
+    public void addGoodsDesc(MultipartFile file, String desc, String price, Merchant merchant) throws IOException {
         GoodsDescription description = new GoodsDescription();
         description.setDescription(desc);
         description.setPrice(Integer.valueOf(price));
+        description.setMerchant(merchant);
         String hash = DigestUtils.md5DigestAsHex(file.getBytes());
         description.setImageHash(hash);
         goodsDescDao.save(description);
         try (OutputStream os = new FileOutputStream(imgPath + "/" + hash)) {
             os.write(file.getBytes());
+        }
+    }
+
+    public void deleteById(Integer id) {
+        goodsDescDao.delete(id);
+    }
+
+    public void updateGoodsDesc(MultipartFile file, String desc, String price, String id) throws IOException {
+        GoodsDescription description = goodsDescDao.findOne(Integer.valueOf(id));
+        if (description != null){
+            description.setPrice(Integer.valueOf(price));
+            description.setDescription(desc);
+            if (file != null){
+                String hash = DigestUtils.md5DigestAsHex(file.getBytes());
+                try (OutputStream os = new FileOutputStream(imgPath + "/" + hash)) {
+                    os.write(file.getBytes());
+                }
+                description.setImageHash(hash);
+            }
+            goodsDescDao.save(description);
         }
     }
 }

@@ -118,4 +118,14 @@ public class MachineController {
             return BaseResponse.error(ErrorCodes.queryMachineError, e.getMessage());
         }
     }
+
+    @GetMapping("/delete")
+    public Object deleteById(Integer id){
+        try {
+            this.machineService.deleteById(id);
+            return BaseResponse.success();
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.deleteMachineError, e.getMessage());
+        }
+    }
 }

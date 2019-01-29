@@ -111,4 +111,8 @@ public class MachineService {
     public VendingMachine queryBySerial(String serial) {
         return machineDao.findBySerial(serial);
     }
+
+    public void deleteById(Integer id) {
+        machineDao.delete(id);
+    }
 }

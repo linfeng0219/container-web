@@ -113,4 +113,10 @@ public class DeliverySheetService {
             sheetDao.save(sheet);
         }
     }
+
+    public void delete(DeliverySheet sheet) {
+        if (sheet.getId() != null){
+            sheetDao.save(sheet);
+        }
+    }
 }

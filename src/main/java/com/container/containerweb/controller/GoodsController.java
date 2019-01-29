@@ -132,5 +132,15 @@ public class GoodsController {
             return BaseResponse.error(ErrorCodes.saveDeliverymanError, e.getMessage());
         }
     }
+
+    @PostMapping("/delete-deliver-sheet")
+    public Object deleteDeliverSheet(@RequestBody DeliverySheet sheet) {
+        try {
+            deliverySheetService.delete(sheet);
+            return BaseResponse.success();
+        } catch (Exception e) {
+            return BaseResponse.error(ErrorCodes.saveDeliverymanError, e.getMessage());
+        }
+    }
 }
 
