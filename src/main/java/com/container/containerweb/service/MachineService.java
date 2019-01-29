@@ -54,7 +54,7 @@ public class MachineService {
                 goodsDao.save(e);
                 collectDao.updateActualDeliverAmount(e.getBatchNo(), e.getGoodsDescription().getDescription());
                 DeliverySheet ds = deliverySheetDao.findFirstByBatchNo(e.getBatchNo());
-                if(ds!=null){
+                if(ds!=null && (ds.getStatus()!=DeliveryStatus.FORSALR.getCode())){
                     ds.setStatus(DeliveryStatus.FORSALR.getCode());
                     deliverySheetDao.save(ds);
                 }
