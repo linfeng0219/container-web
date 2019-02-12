@@ -108,6 +108,9 @@ public class GoodsOrderService {
             if (!StringUtils.isEmpty(dto.getTo())) {
                 predicates.add(cb.le(root.get("paymentTime"), dto.getTo()));
             }
+            if (!StringUtils.isEmpty(dto.getGoodsDescId())){
+                predicates.add(cb.equal(root.get("goods").get("goodsDescription").get("id").as(Integer.class), dto.getGoodsDescId()));
+            }
             return query.where(predicates.toArray(new Predicate[0])).getRestriction();
         };
     }
