@@ -33,14 +33,14 @@ public class GoodsDescController {
     }
 
     @RequestMapping("/add")
-    public Object add(HttpSession session, MultipartFile file, String description, String price, String id) {
+    public Object add(HttpSession session, MultipartFile file, String description, String price, String barcode,String id) {
         try {
             UserDto user = (UserDto) session.getAttribute("user");
             if (user != null) {
                 if (!StringUtils.isEmpty(id)) {
-                    goodsDescService.updateGoodsDesc(file, description, price, id);
+                    goodsDescService.updateGoodsDesc(file, description, price, id,barcode);
                 } else {
-                    goodsDescService.addGoodsDesc(file, description, price, user.getMerchant());
+                    goodsDescService.addGoodsDesc(file, description, price, barcode,user.getMerchant());
                 }
                 return BaseResponse.success();
             } else {

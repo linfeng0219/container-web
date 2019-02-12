@@ -28,11 +28,12 @@ public class GoodsDescService {
         return goodsDescDao.findAll();
     }
 
-    public void addGoodsDesc(MultipartFile file, String desc, String price, Merchant merchant) throws IOException {
+    public void addGoodsDesc(MultipartFile file, String desc, String price, String barcode, Merchant merchant) throws IOException {
         GoodsDescription description = new GoodsDescription();
         description.setDescription(desc);
         description.setPrice(Integer.valueOf(price));
         description.setMerchant(merchant);
+        description.setBarcode(barcode);
         String hash = DigestUtils.md5DigestAsHex(file.getBytes());
         description.setImageHash(hash);
         goodsDescDao.save(description);
@@ -45,11 +46,12 @@ public class GoodsDescService {
         goodsDescDao.delete(id);
     }
 
-    public void updateGoodsDesc(MultipartFile file, String desc, String price, String id) throws IOException {
+    public void updateGoodsDesc(MultipartFile file, String desc, String price, String id, String barcode) throws IOException {
         GoodsDescription description = goodsDescDao.findOne(Integer.valueOf(id));
         if (description != null){
             description.setPrice(Integer.valueOf(price));
             description.setDescription(desc);
+            description.setBarcode(barcode);
             if (file != null){
                 String hash = DigestUtils.md5DigestAsHex(file.getBytes());
                 try (OutputStream os = new FileOutputStream(imgPath + "/" + hash)) {
