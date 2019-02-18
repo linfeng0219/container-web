@@ -34,9 +34,6 @@ public class Goods {
     @ManyToOne
     private VendingMachine vendingMachine;
 
-    @ManyToOne
-    private User deliveryman;
-
     public Goods() {
     }
 
@@ -116,12 +113,8 @@ public class Goods {
         this.batchNo = batchNo;
     }
 
-    public User getDeliveryman() {
-        return deliveryman;
-    }
-
     public void setDeliveryman(User deliveryman) {
-        this.deliveryman = deliveryman;
+
     }
 
     @Override

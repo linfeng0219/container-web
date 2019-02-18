@@ -45,7 +45,7 @@ public class MachineService {
     //上架
     public void storeGoods(MachineGoodsBinding binding) {
         List<Goods> goodsList = binding.getGoodsList();
-        for (Goods goods:goodsList){
+        for (Goods goods : goodsList) {
             Goods e = goodsDao.findOne(goods.getId());
             if (e != null) {
                 e.setIdx(goods.getIdx());
@@ -54,7 +54,7 @@ public class MachineService {
                 goodsDao.save(e);
                 collectDao.updateActualDeliverAmount(e.getBatchNo(), e.getGoodsDescription().getDescription());
                 DeliverySheet ds = deliverySheetDao.findFirstByBatchNo(e.getBatchNo());
-                if(ds!=null && (ds.getStatus()!=DeliveryStatus.FORSALR.getCode())){
+                if (ds != null && (ds.getStatus() != DeliveryStatus.FORSALR.getCode())) {
                     ds.setStatus(DeliveryStatus.FORSALR.getCode());
                     deliverySheetDao.save(ds);
                 }
@@ -63,16 +63,17 @@ public class MachineService {
             }
         }
     }
+
     //销毁
     public void removeGoods(MachineGoodsBinding binding) {
         List<Goods> goodsList = binding.getGoodsList();
-        for (Goods goods:goodsList){
+        for (Goods goods : goodsList) {
             Goods e = goodsDao.findOne(goods.getId());
             if (e != null) {
                 e.setStatus(GoodsStatus.OUT.getCode());
                 goodsDao.save(e);
                 DeliverySheet ds = deliverySheetDao.findFirstByBatchNo(e.getBatchNo());
-                if(ds!=null){
+                if (ds != null) {
                     ds.setStatus(DeliveryStatus.COMPLETE.getCode());
                     deliverySheetDao.save(ds);
                 }
@@ -98,7 +99,7 @@ public class MachineService {
 
     public VendingMachine updateStatus(VendingMachine machine) {
         VendingMachine one = machineDao.findBySerial(machine.getSerial());
-        List<Goods> goods = goodsDao.findByVendingMachineSerialAndStatus(machine.getSerial(),GoodsStatus.FORSALE.getCode());
+        List<Goods> goods = goodsDao.findByVendingMachineSerialAndStatus(machine.getSerial(), GoodsStatus.FORSALE.getCode());
         one.setStatus(machine.getStatus());
         one.setUpdateTime(System.currentTimeMillis());
         one.setTemperature(machine.getTemperature());
@@ -114,5 +115,9 @@ public class MachineService {
 
     public void deleteById(Integer id) {
         machineDao.delete(id);
+    }
+
+    public List<VendingMachine> getAllMachines() {
+        return machineDao.findAll();
     }
 }

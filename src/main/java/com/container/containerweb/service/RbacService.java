@@ -54,10 +54,8 @@ public class RbacService {
         userDao.save(user);
     }
 
-    public void disableUser(Integer userId) {
-        User user = userDao.findOne(userId);
-        user.setStatus(UserStatus.DISABLED.getCode());
-        userDao.save(user);
+    public void deleteUser(Integer userId) {
+        userDao.delete(userId);
     }
 
     public void saveRole(Role role) {

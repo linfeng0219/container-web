@@ -28,7 +28,8 @@ public class RbacController {
         try {
             UserDto user = rbacService.login(dto.getUsername(), dto.getPassword());
             session.setAttribute("user", user);
-            session.setAttribute("merchantId", user.getMerchant().getId());
+            if (user.getMerchant() != null)
+                session.setAttribute("merchantId", user.getMerchant().getId());
             return BaseResponse.success(user);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.loginError, e.getMessage());
@@ -55,10 +56,10 @@ public class RbacController {
         }
     }
 
-    @PostMapping("/user/disable")
-    public Object disableUser(Integer userId) {
+    @PostMapping("/user/delete")
+    public Object disableUser(Integer id) {
         try {
-            rbacService.disableUser(userId);
+            rbacService.deleteUser(id);
             return BaseResponse.success();
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.disableUserError, e.getMessage());

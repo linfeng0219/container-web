@@ -3,6 +3,8 @@ package com.container.containerweb.controller;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.MachineGoodsBinding;
+import com.container.containerweb.dto.RoleDto;
+import com.container.containerweb.dto.UserDto;
 import com.container.containerweb.model.biz.Goods;
 import com.container.containerweb.model.biz.GoodsDescription;
 import com.container.containerweb.model.biz.Merchant;
@@ -32,7 +34,13 @@ public class MachineController {
     public Object list(HttpSession session) {
         try {
             Integer merchantId = (Integer) session.getAttribute("merchantId");
-            List<VendingMachine> list = machineService.getMachineListOfMerchant(merchantId);
+            UserDto userDto = (UserDto) session.getAttribute("user");
+            List<VendingMachine> list;
+            if (userDto.getRoles().contains(new RoleDto("admin"))){
+                list = machineService.getAllMachines();
+            } else {
+                list = machineService.getMachineListOfMerchant(merchantId);
+            }
             list = list.stream().peek(e -> {
                 Merchant _m = new Merchant();
                 _m.setName(e.getMerchant().getName());
