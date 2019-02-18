@@ -40,9 +40,6 @@ public class VendingMachine {
     @ManyToOne
     private Merchant merchant;//运营商
 
-    @OneToOne
-    private User master;//负责人
-
     @Transient
     private List<Goods> goods;
 
@@ -92,14 +89,6 @@ public class VendingMachine {
 
     public void setCreateTime(Long createTime) {
         this.createTime = createTime;
-    }
-
-    public User getMaster() {
-        return master;
-    }
-
-    public void setMaster(User master) {
-        this.master = master;
     }
 
     public Merchant getMerchant() {

@@ -87,11 +87,6 @@ public class MachineService {
         if (machine.getId() == null)
             machine.setCreateTime(System.currentTimeMillis());
         Merchant merchant = merchantDao.findOne(machine.getMerchant().getId());
-        User master = userDao.findOne(machine.getMaster().getId());
-        if (merchant == null || master == null) {
-            throw new IllegalArgumentException();
-        }
-        machine.setMaster(master);
         machine.setMerchant(merchant);
         machine.setStatus(MachineStatus.OFFLINE.getCode());
         return machineDao.save(machine);

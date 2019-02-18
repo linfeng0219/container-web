@@ -45,11 +45,6 @@ public class MachineController {
                 Merchant _m = new Merchant();
                 _m.setName(e.getMerchant().getName());
                 e.setMerchant(_m);
-
-                User _master = e.getMaster();
-                if (_master != null) {
-                    e.setMaster(_master.simple());
-                }
             }).collect(Collectors.toList());
             return BaseResponse.success(list);
         } catch (Exception e) {
@@ -103,7 +98,6 @@ public class MachineController {
             }
             m.setGoods(goodsList);
             m.setMerchant(null);
-            m.setMaster(null);
             return BaseResponse.success(m);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.uploadStatusError, e.getMessage());
