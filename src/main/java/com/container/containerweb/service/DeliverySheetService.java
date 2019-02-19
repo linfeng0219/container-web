@@ -120,4 +120,15 @@ public class DeliverySheetService {
             sheetDao.save(sheet);
         }
     }
+
+    public Page<DeliverySheet> getSheetPage(QuerySheetDto dto) {
+        Page<DeliverySheet> page = sheetDao.findAll(new PageRequest(dto.getPage() - 1, dto.getSize()));
+
+        for (DeliverySheet sheet : page.getContent()) {
+            List<DeliveryInfoDescription> descriptions = deliveryInfoDescriptionDao.findBySheetId(sheet.getId());
+            sheet.setDescriptions(descriptions);
+        }
+
+        return page;
+    }
 }

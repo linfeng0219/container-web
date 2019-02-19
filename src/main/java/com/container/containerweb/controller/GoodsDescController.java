@@ -2,6 +2,7 @@ package com.container.containerweb.controller;
 
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
+import com.container.containerweb.dto.RoleDto;
 import com.container.containerweb.dto.UserDto;
 import com.container.containerweb.model.biz.GoodsDescription;
 import com.container.containerweb.service.GoodsDescService;
@@ -23,9 +24,16 @@ public class GoodsDescController {
     private GoodsDescService goodsDescService;
 
     @RequestMapping("/list")
-    public Object list() {
+    public Object list(HttpSession session) {
         try {
-            List<GoodsDescription> descriptions = goodsDescService.getList();
+            Integer merchantId = (Integer) session.getAttribute("merchantId");
+            UserDto userDto = (UserDto) session.getAttribute("user");
+            List<GoodsDescription> descriptions;
+            if (userDto.getRoles().contains(new RoleDto("admin"))){
+                descriptions = goodsDescService.getList();
+            } else {
+                descriptions = goodsDescService.getListByMerchant(merchantId);
+            }
             return BaseResponse.success(descriptions);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryGoodsDescError, e.getMessage());

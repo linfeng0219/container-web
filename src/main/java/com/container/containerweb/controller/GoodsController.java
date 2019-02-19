@@ -3,10 +3,7 @@ package com.container.containerweb.controller;
 import com.container.containerweb.base.BaseResponse;
 import com.container.containerweb.constants.ErrorCodes;
 import com.container.containerweb.dto.*;
-import com.container.containerweb.model.biz.DeliverySheet;
-import com.container.containerweb.model.biz.Goods;
-import com.container.containerweb.model.biz.GoodsCollect;
-import com.container.containerweb.model.biz.VendingMachine;
+import com.container.containerweb.model.biz.*;
 import com.container.containerweb.model.rbac.User;
 import com.container.containerweb.service.*;
 import org.springframework.data.domain.Page;
@@ -86,7 +83,13 @@ public class GoodsController {
     public Object getDeliverySheetPage(QuerySheetDto dto, HttpSession session) {
         try {
             Integer merchantId = (Integer) session.getAttribute("merchantId");
-            Page<DeliverySheet> page = deliverySheetService.getSheetPageOfMerchantId(dto, merchantId);
+            UserDto userDto = (UserDto) session.getAttribute("user");
+            Page<DeliverySheet> page;
+            if (userDto.getRoles().contains(new RoleDto("admin"))) {
+                page = deliverySheetService.getSheetPage(dto);
+            } else {
+                page = deliverySheetService.getSheetPageOfMerchantId(dto, merchantId);
+            }
             return BaseResponse.success(page);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.querySheetError, e.getMessage());
@@ -97,7 +100,13 @@ public class GoodsController {
     public Object getGoodsCollectPage(QueryGoodsCollectDto dto, HttpSession session) {
         try {
             Integer merchantId = (Integer) session.getAttribute("merchantId");
-            Page<GoodsCollect> page = collectService.getPage(dto, merchantId);
+            UserDto userDto = (UserDto) session.getAttribute("user");
+            Page<GoodsCollect> page;
+            if (userDto.getRoles().contains(new RoleDto("admin"))) {
+                page = collectService.getPage(dto);
+            } else {
+                page = collectService.getPage(dto, merchantId);
+            }
             return BaseResponse.success(page);
         } catch (Exception e) {
             return BaseResponse.error(ErrorCodes.queryGoodsCollectError, e.getMessage());
